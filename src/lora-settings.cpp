@@ -5,18 +5,8 @@ LoraSettingsManager::LoraSettingsManager(SX1276 *radio) {
 };
 
 void LoraSettingsManager::updateSettings(LoraSettings settings) {
-  if (this->radio->setFrequency(settings.frequency) == RADIOLIB_ERR_INVALID_FREQUENCY) {
-    Serial.println(F("Selected frequency is invalid for this module!"));
-    while (true) { delay(10); }
-  }
-  Serial.println(F("Frequency was updated"));
-
-  if (this->radio->setBandwidth(settings.bandwidth) == RADIOLIB_ERR_INVALID_BANDWIDTH) {
-    Serial.println(F("Selected bandwidth is invalid for this module!"));
-    while (true);
-  }
-
-  Serial.println(F("Bandwidth was updated"));
+  this->updateFrequency(settings.frequency, false);
+  this->updateBandwidth(settings.bandwidth, false);
 
   if (this->radio->setSpreadingFactor(settings.spreagingFactor) == RADIOLIB_ERR_INVALID_SPREADING_FACTOR) {
     Serial.println(F("Selected spreading factor is invalid for this module!"));
@@ -26,8 +16,6 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
     return;
   }
 
-  Serial.println(F("Spreading factor was updated"));
-
   if (this->radio->setCodingRate(settings.codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
     Serial.println(F("Selected coding rate is invalid for this module!"));
     Serial.println(settings.codingRate);
@@ -36,14 +24,10 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
     return;
   }
 
-  Serial.println(F("Coding rate was updated"));
-
   if (this->radio->setSyncWord(settings.syncWord) != RADIOLIB_ERR_NONE) {
     Serial.println(F("Unable to set sync word!"));
     while (true);
   }
-
-  Serial.println(F("Sync word was updated"));
 
   this->settings = settings;
   if (this->settingsUpdatedCallback) {
@@ -53,4 +37,42 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
 
 void LoraSettingsManager::setSettingsUpdatedCallback(void (* callback)(LoraSettings settings)) {
   this->settingsUpdatedCallback = callback;
+}
+
+void LoraSettingsManager::updateFrequency(float freq, bool callCb) {
+  if (this->radio->setFrequency(freq) == RADIOLIB_ERR_INVALID_FREQUENCY) {
+    Serial.println(F("Selected frequency is invalid for this module:"));
+    Serial.println(freq);
+    if (freq != DEFAULT_BANDWIDTH) {
+      Serial.print("Set default frequency:");
+      Serial.println(DEFAULT_FREQUENCY);
+      this->updateFrequency(DEFAULT_BANDWIDTH);
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+
+  this->settings.frequency = freq;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updateBandwidth(float bandwidth, bool callCb) {
+  if (this->radio->setBandwidth(bandwidth) == RADIOLIB_ERR_INVALID_BANDWIDTH) {
+    Serial.print(F("Selected bandwidth is invalid for this module:"));
+    Serial.println(bandwidth);
+    if (bandwidth != DEFAULT_BANDWIDTH) {
+      Serial.print("Set default bandwidth:");
+      Serial.println(DEFAULT_BANDWIDTH);
+      this->updateBandwidth(DEFAULT_BANDWIDTH);
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+
+  this->settings.bandwidth = bandwidth;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
 }

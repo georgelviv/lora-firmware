@@ -26,8 +26,7 @@ class Lora {
     void transmit(String msg);
     void check();
 
-    void flashLedOn();
-    void flashLedOff();
+    void setReceiveCallback(void (* callback)(String msg));
 
     static void packetReceiveCallback(void);
     static void packetSentCallback(void);
@@ -35,11 +34,16 @@ class Lora {
 
   private:
     SX1276 radio = new Module(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
+  
     bool isTransmitInProgres = false;
     uint32_t lastFlashTime = 0;
     int transmissionState = RADIOLIB_ERR_NONE;
+    void (* receiveCallback)(String msg);
+  
     void listen();
     void handleReceiveMessage();
+    void flashLedOn();
+    void flashLedOff();
 };
 
 #endif

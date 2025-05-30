@@ -41,32 +41,8 @@ void Lora::packetSentCallback() {
 void Lora::transmit(String msg) {
   this->transmissionState = this->radio.startTransmit(msg);
   this->isTransmitInProgres = true;
-  Serial.println("Message sent");
 }
 
-void Lora::check() {
-  if (Lora::interruptFlag) {
-    Lora::interruptFlag = false;
-    this->flashLedOn();
-    if (this->isTransmitInProgres) {
-      if (this->transmissionState == RADIOLIB_ERR_NONE) {
-        // packet was successfully sent
-        Serial.println(F("transmission finished!"));
-
-      } else {
-        Serial.print(F("failed, code "));
-        Serial.println(transmissionState);
-
-      }
-      this->isTransmitInProgres = false;
-      this->listen();
-    } else {
-      this->handleReceiveMessage();
-    }
-  }
-
-  this->flashLedOff();
-}
 
 void Lora::flashLedOn() {
   digitalWrite(LED_PIN, HIGH);
@@ -77,6 +53,25 @@ void Lora::flashLedOff() {
   if ((millis() - this->lastFlashTime) > 50) {
     digitalWrite(LED_PIN, LOW);
   }
+}
+
+void Lora::check() {
+  if (Lora::interruptFlag) {
+    Lora::interruptFlag = false;
+    this->flashLedOn();
+    if (this->isTransmitInProgres) {
+      if (this->transmissionState != RADIOLIB_ERR_NONE) {
+        Serial.print(F("failed, code "));
+        Serial.println(transmissionState);
+      }
+      this->isTransmitInProgres = false;
+      this->listen();
+    } else {
+      this->handleReceiveMessage();
+    }
+  }
+
+  this->flashLedOff();
 }
 
 void Lora::listen() {
@@ -93,17 +88,15 @@ void Lora::handleReceiveMessage() {
   
   int state = radio.readData(payload);
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("Received");
-    Serial.println(payload);
     // float rssi = radio.getRSSI();
     // float snr = radio.getSNR();
   
-    // if (this->receiveCallback) {
-    //   LoraMessage msg;
-    //   msg.snr = snr;
-    //   msg.rssi = rssi;
-    //   msg.msg = payload;
-    //   this->receiveCallback(msg);
-    // }
+    if (this->receiveCallback) {
+      this->receiveCallback(payload);
+    }
   }
+}
+
+void Lora::setReceiveCallback(void (* callback)(String msg)) {
+  this->receiveCallback = callback;
 }

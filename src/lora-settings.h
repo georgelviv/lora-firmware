@@ -22,6 +22,8 @@ class LoraSettingsManager {
   public:
     LoraSettingsManager(SX1276 *radio);
     void updateSettings(LoraSettings settings);
+    void updateFrequency(float freq, bool callCb = true);
+    void updateBandwidth(float bandwidth, bool callCb = true);
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
 
   private:
