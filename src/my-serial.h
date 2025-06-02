@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <lora.h>
+#include "utils.h"
 
 class MySerial {
   
@@ -15,8 +16,9 @@ class MySerial {
     Lora *lora;
     void handleSerialMessage(String command, String params);
     void sendPing();
+    void sendPingBack();
+    void sendConfigSync(String configMsg);
     void updateSettings(String params);
-    int parseParams(String str, String paramsPairs[10][2]);
 };
 
 #endif
