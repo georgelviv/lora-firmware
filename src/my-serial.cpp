@@ -39,8 +39,7 @@ void MySerial::parseLoraMessage(String msg) {
   if (command == "PING") {
     this->sendPingBack();
   } else if (command == "CONFIG_SYNC") {
-    Serial.print("Sync config:");
-    Serial.println(params);
+    this->syncConfig(params);
   } else {
     Serial.print("Unknown incoming Lora message:");
     Serial.println(msg);
@@ -71,4 +70,12 @@ void MySerial::sendPingBack() {
 
 void MySerial::sendConfigSync(String configMsg) {
   lora->transmit("CONFIG_SYNC;" + configMsg);
+}
+
+void MySerial::syncConfig(String params) {
+  lora->setTransmitCallback([this, params]() {
+    this->updateSettings(params);
+  });
+
+  lora->transmit("CONFIG_SYNC_ACK;" + params);
 }

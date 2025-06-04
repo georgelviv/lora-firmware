@@ -43,7 +43,6 @@ void Lora::transmit(String msg) {
   this->isTransmitInProgres = true;
 }
 
-
 void Lora::flashLedOn() {
   digitalWrite(LED_PIN, HIGH);
   this->lastFlashTime = millis();
@@ -63,6 +62,11 @@ void Lora::check() {
       if (this->transmissionState != RADIOLIB_ERR_NONE) {
         Serial.print(F("failed, code "));
         Serial.println(transmissionState);
+      } else {
+        if (this->transmitCallback) {
+          Serial.println("transmit callback");
+          this->transmitCallback();
+        }
       }
       this->isTransmitInProgres = false;
       this->listen();
@@ -99,4 +103,8 @@ void Lora::handleReceiveMessage() {
 
 void Lora::setReceiveCallback(void (* callback)(String msg)) {
   this->receiveCallback = callback;
+}
+
+void Lora::setTransmitCallback(std::function<void()> callback) {
+  this->transmitCallback = callback;
 }

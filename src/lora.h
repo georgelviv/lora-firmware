@@ -27,6 +27,7 @@ class Lora {
     void check();
 
     void setReceiveCallback(void (* callback)(String msg));
+    void setTransmitCallback(std::function<void()> callback);
 
     static void packetReceiveCallback(void);
     static void packetSentCallback(void);
@@ -39,6 +40,7 @@ class Lora {
     uint32_t lastFlashTime = 0;
     int transmissionState = RADIOLIB_ERR_NONE;
     void (* receiveCallback)(String msg);
+    std::function<void()> transmitCallback;
   
     void listen();
     void handleReceiveMessage();

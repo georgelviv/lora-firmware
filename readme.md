@@ -16,3 +16,4 @@
 ### Config Sync
 
 `CONFIG_SYNC;FQ=868.0`
+`CONFIG_SYNC_ACK`

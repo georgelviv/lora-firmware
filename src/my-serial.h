@@ -19,6 +19,7 @@ class MySerial {
     void sendPingBack();
     void sendConfigSync(String configMsg);
     void updateSettings(String params);
+    void syncConfig(String params);
 };
 
 #endif
