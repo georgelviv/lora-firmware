@@ -29,6 +29,7 @@ void MySerial::handleSerialMessage(String command, String params) {
 }
 
 void MySerial::sendPing() {
+  this->pingStart = millis();
   lora->transmit("PING");
 }
 
@@ -38,8 +39,16 @@ void MySerial::parseLoraMessage(String msg) {
 
   if (command == "PING") {
     this->sendPingBack();
+  } else if (command == "PING_ACK") {
+    this->printPingSuccess();
   } else if (command == "CONFIG_SYNC") {
     this->syncConfig(params);
+  } else if (command == "CONFIG_SYNC_ACK") {
+    this->updateSettingsAndCheck(params);
+  } else if (command == "CONFIG_SYNC_CHECK") {
+    this->sendConfigCheckAck();
+  } else if (command == "CONFIG_SYNC_CHECK_ACK") {
+    this->printSuccessConfigUpdate();
   } else {
     Serial.print("Unknown incoming Lora message:");
     Serial.println(msg);
@@ -69,6 +78,7 @@ void MySerial::sendPingBack() {
 }
 
 void MySerial::sendConfigSync(String configMsg) {
+  this->configSyncStart = millis();
   lora->transmit("CONFIG_SYNC;" + configMsg);
 }
 
@@ -78,4 +88,30 @@ void MySerial::syncConfig(String params) {
   });
 
   lora->transmit("CONFIG_SYNC_ACK;" + params);
+}
+
+void MySerial::updateSettingsAndCheck(String params) {
+  this->updateSettings(params);
+  lora->transmit("CONFIG_SYNC_CHECK");
+}
+
+void MySerial::printPingSuccess() {
+  Serial.println("PING_ACK;" + this->getStatusString(&this->pingStart));
+}
+
+void MySerial::sendConfigCheckAck() {
+  lora->transmit("CONFIG_SYNC_CHECK_ACK");
+}
+
+void MySerial::printSuccessConfigUpdate() {
+  Serial.println("CONFIG_SYNC_CHECK_ACK;" +  this->getStatusString(&this->configSyncStart));
+}
+
+String MySerial::getStatusString(unsigned long* startTime) {
+  unsigned long diff = millis() - *startTime;
+
+  *startTime = 0;
+  float rssi = lora->getRSSI();
+  float snr = lora->getSNR();
+  return "DELAY=" + String(diff) + ",RSSI=" + String(rssi) + ",SNR=" + String(snr);
 }

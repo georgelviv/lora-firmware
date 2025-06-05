@@ -25,6 +25,8 @@ class Lora {
     void init(LoraSettings initalSettings);
     void transmit(String msg);
     void check();
+    float getRSSI();
+    float getSNR();
 
     void setReceiveCallback(void (* callback)(String msg));
     void setTransmitCallback(std::function<void()> callback);

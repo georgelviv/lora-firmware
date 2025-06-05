@@ -64,7 +64,6 @@ void Lora::check() {
         Serial.println(transmissionState);
       } else {
         if (this->transmitCallback) {
-          Serial.println("transmit callback");
           this->transmitCallback();
         }
       }
@@ -91,14 +90,19 @@ void Lora::handleReceiveMessage() {
   String payload = "0";
   
   int state = radio.readData(payload);
-  if (state == RADIOLIB_ERR_NONE) {
-    // float rssi = radio.getRSSI();
-    // float snr = radio.getSNR();
-  
+  if (state == RADIOLIB_ERR_NONE) {  
     if (this->receiveCallback) {
       this->receiveCallback(payload);
     }
   }
+}
+
+float Lora::getRSSI() {
+  return radio.getRSSI();
+}
+
+float Lora::getSNR() {
+  return radio.getSNR();
 }
 
 void Lora::setReceiveCallback(void (* callback)(String msg)) {

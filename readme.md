@@ -2,7 +2,7 @@
 
 ### Ping
 `PING` - ping 
-`PING_ACK` - response to ping
+`PING_ACK;DELAY=500,RSSI=1` - response to ping
 
 
 ### Config
@@ -17,3 +17,11 @@
 
 `CONFIG_SYNC;FQ=868.0`
 `CONFIG_SYNC_ACK`
+
+`CONFIG_SYNC_CHECK`
+`CONFIG_SYNC_CHECK_ACK`
+
+
+## Ideas
+- Replace String?
+- Add build version

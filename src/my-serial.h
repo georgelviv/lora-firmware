@@ -20,6 +20,14 @@ class MySerial {
     void sendConfigSync(String configMsg);
     void updateSettings(String params);
     void syncConfig(String params);
+    void updateSettingsAndCheck(String params);
+    void printPingSuccess();
+    void sendConfigCheckAck();
+    void printSuccessConfigUpdate();
+    String getStatusString(unsigned long* startTime);
+
+    unsigned long pingStart = 0;
+    unsigned long configSyncStart = 0;
 };
 
 #endif

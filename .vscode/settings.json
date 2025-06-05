@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
-    "RADIOLIB"
+    "RADIOLIB",
+    "RSSI"
   ],
   "files.associations": {
     "*.jinja": "jinja",
