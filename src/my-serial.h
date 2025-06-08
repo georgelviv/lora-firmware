@@ -15,16 +15,16 @@ class MySerial {
   private:
     Lora *lora;
     void handleSerialMessage(String command, String params);
-    void sendPing();
-    void sendPingBack();
+    void sendPing(String params);
+    void sendPingBack(String params);
     void sendConfigSync(String configMsg);
     void updateSettings(String params);
     void syncConfig(String params);
     void updateSettingsAndCheck(String params);
-    void printPingSuccess();
+    void printPingSuccess(String params);
     void sendConfigCheckAck();
-    void printSuccessConfigUpdate();
-    String getStatusString(unsigned long* startTime);
+    void printSuccessConfigUpdate(String params);
+    String getStatusString(unsigned long* startTime, String params);
     void printConfig();
 
     unsigned long pingStart = 0;

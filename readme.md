@@ -1,8 +1,8 @@
 # Serial messages
 
 ## Ping
-`PING` - ping 
-`PING_ACK;DELAY=500,RSSI=1` - response to ping
+`PING;ID=1` - ping 
+`PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75` - response to ping
 
 ## Config
 

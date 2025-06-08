@@ -52,3 +52,33 @@ String getParams(String msg) {
 
   return params;
 }
+
+String formatParams(std::initializer_list<String> args) {
+  String result;
+  int count = 0;
+  for (auto it = args.begin(); it != args.end(); ++it) {
+    if (count % 2 == 0) {
+      result += *it + "=";
+    } else {
+      result += *it;
+      if (count < args.size() - 1) result += ",";
+    }
+    count++;
+  }
+  return result;
+}
+
+String getParam(String params, String lookingParam) {
+  String parsedParams[1][2];
+  int paramsCount = parseParams(params, parsedParams);
+
+  for (int i = 0; i < paramsCount; i++) {
+    String key = parsedParams[i][0];
+    String val = parsedParams[i][1];
+    if (key == lookingParam) {
+      return val;
+    }
+  }
+
+  return "";
+}
