@@ -2,7 +2,7 @@
 #define STORAGE_H
 
 #include <Preferences.h>
-#include "lora.h"
+#include <ProjectConstants.h>
 
 class Storage {
 

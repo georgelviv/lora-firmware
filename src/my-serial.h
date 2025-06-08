@@ -25,6 +25,7 @@ class MySerial {
     void sendConfigCheckAck();
     void printSuccessConfigUpdate();
     String getStatusString(unsigned long* startTime);
+    void printConfig();
 
     unsigned long pingStart = 0;
     unsigned long configSyncStart = 0;

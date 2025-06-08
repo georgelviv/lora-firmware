@@ -23,8 +23,11 @@ void MySerial::handleSerialMessage(String command, String params) {
     this->updateSettings(params);
   } else if (command == "CONFIG_SYNC") {
     this->sendConfigSync(params);
+  } else if (command == "CONFIG_GET") {
+    this->printConfig();
   } else {
-    Serial.println("Unknown message");
+    Serial.print("Unknown message:");
+    Serial.println(command);
   }
 }
 
@@ -66,6 +69,8 @@ void MySerial::updateSettings(String str) {
       this->lora->settings.updateFrequency(val.toFloat());
     } else if (key == "BW") {
        this->lora->settings.updateFrequency(val.toFloat());
+    } else if (key == "SF") {
+       this->lora->settings.updateSpreadingFactor(val.toInt());
     } else {
       Serial.println("Uknown config to update");
       Serial.println(key);
@@ -114,4 +119,17 @@ String MySerial::getStatusString(unsigned long* startTime) {
   float rssi = lora->getRSSI();
   float snr = lora->getSNR();
   return "DELAY=" + String(diff) + ",RSSI=" + String(rssi) + ",SNR=" + String(snr);
+}
+
+void MySerial::printConfig() {
+  LoraSettings settings = lora->settings.getSettings();
+
+  Serial.print("CONFIG_GET;FW=");
+  Serial.print(settings.frequency);
+  Serial.print(",BW=");
+  Serial.print(settings.bandwidth);
+  Serial.print(",SF=");
+  Serial.print(settings.spreagingFactor);
+  Serial.print(",CR=");
+  Serial.println(settings.codingRate);
 }

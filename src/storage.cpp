@@ -17,6 +17,7 @@ LoraSettings Storage::getLoraSettings() {
   settings.spreagingFactor = DEFAULT_SPREADING_FACTOR;
   settings.codingRate = DEFAULT_CODDING_RATE;
   settings.syncWord = DEFAULT_SYNC_WORD;
+  settings.transmitPower = DEFAULT_TRANSMIT_POWER;
 
   bool frequencyExists = this->preferences.isKey("frequency");
   if (frequencyExists) {
@@ -41,6 +42,11 @@ LoraSettings Storage::getLoraSettings() {
   bool syncWordExists = this->preferences.isKey("syncWord");
   if (syncWordExists) {
     settings.syncWord = this->preferences.getInt("syncWord");
+  }
+
+  bool transmitPowerExists = this->preferences.isKey("transmitPower");
+  if (transmitPowerExists) {
+    settings.transmitPower = this->preferences.getInt("transmitPower");
   }
 
   return settings;

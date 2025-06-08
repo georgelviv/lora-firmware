@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
 #include "my-serial.h"
-#include "lora.h"
-#include "display.h"
+#include <Lora.h>
+#include <Display.h>
 #include "storage.h"
 
 Lora lora;

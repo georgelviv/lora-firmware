@@ -72,6 +72,11 @@ void Display::setDashboard() {
   oled.setCursor(25, 25);
   oled.println(this->settings.syncWord);
 
+  oled.setCursor(50, 25);
+  oled.println("TP:");
+  oled.setCursor(70, 25);
+  oled.println(this->settings.transmitPower);
+
   oled.display();
 }
 

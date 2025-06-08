@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include <RadioLib.h>
-#include "lora-settings.h"
+#include "LoraSettings.h"
 
 #define RADIO_SCLK_PIN 5
 #define RADIO_MISO_PIN 19

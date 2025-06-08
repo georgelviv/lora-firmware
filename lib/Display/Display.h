@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <lora.h>
+#include <ProjectConstants.h>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -25,7 +25,6 @@ class Display {
     void setDashboardSettings(LoraSettings settings);
 
   private:
-    Lora *lora;
     Adafruit_SSD1306 oled;
     DisplayState currentState = DISPLAY_INIT;
     LoraSettings settings;
