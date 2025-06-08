@@ -36,6 +36,7 @@ void MySerial::sendPing(String params) {
 
   String messageId = getParam(params, "ID");
   String msg = "PING;" + formatParams({"ID", messageId});
+  this->pingPendingId = messageId;
 
   lora->transmit(msg);
 }
@@ -108,7 +109,11 @@ void MySerial::updateSettingsAndCheck(String params) {
 }
 
 void MySerial::printPingSuccess(String params) {
-  Serial.println("PING_ACK;" + this->getStatusString(&this->pingStart, params));
+  String messageId = getParam(params, "ID");
+  if (this->pingPendingId == messageId) {
+    Serial.println("PING_ACK;" + this->getStatusString(&this->pingStart, messageId));
+    this->pingPendingId = "";
+  }
 }
 
 void MySerial::sendConfigCheckAck() {
@@ -116,17 +121,16 @@ void MySerial::sendConfigCheckAck() {
 }
 
 void MySerial::printSuccessConfigUpdate(String params) {
-  Serial.println("CONFIG_SYNC_CHECK_ACK;" +  this->getStatusString(&this->configSyncStart, params));
+  String messageId = getParam(params, "ID");
+  Serial.println("CONFIG_SYNC_CHECK_ACK;" +  this->getStatusString(&this->configSyncStart, messageId));
 }
 
-String MySerial::getStatusString(unsigned long* startTime, String params) {
+String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   unsigned long diff = millis() - *startTime;
 
   *startTime = 0;
   float rssi = lora->getRSSI();
   float snr = lora->getSNR();
-
-  String messageId = getParam(params, "ID");
 
   return formatParams({
     "ID", messageId,
@@ -147,4 +151,15 @@ void MySerial::printConfig() {
     "CR", String(settings.codingRate),
     "TP", String(settings.transmitPower)
   }));
+}
+
+void MySerial::checkPending() {
+  if (this->pingPendingId != "") {
+    unsigned long passedTime = millis() - this->pingStart;
+    if (passedTime > PING_TIMEOUT) {
+      String msg = "PING_NO_ACK;" + formatParams({"ID", this->pingPendingId});
+      Serial.println(msg);
+      this->pingPendingId = "";
+    }
+  }
 }

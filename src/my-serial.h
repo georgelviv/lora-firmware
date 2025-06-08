@@ -5,12 +5,15 @@
 #include <Lora.h>
 #include "utils.h"
 
+#define PING_TIMEOUT 5000
+
 class MySerial {
   
   public:
     MySerial(Lora *lora);
     void parseSerial();
     void parseLoraMessage(String msg);
+    void checkPending();
 
   private:
     Lora *lora;
@@ -28,6 +31,7 @@ class MySerial {
     void printConfig();
 
     unsigned long pingStart = 0;
+    String pingPendingId = "";
     unsigned long configSyncStart = 0;
 };
 

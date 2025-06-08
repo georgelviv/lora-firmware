@@ -34,6 +34,7 @@ void loraSetup() {
 void loop() {
   mySerial.parseSerial();
   lora.check();
+  mySerial.checkPending();
 }
 
 void settingsUpdatedCallback(LoraSettings loraSettings) {
