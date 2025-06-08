@@ -4,10 +4,11 @@
 #include "Arduino.h"
 #include <RadioLib.h>
 #include <ProjectConstants.h>
+#include <Logger.h>
 
 class LoraSettingsManager {
   public:
-    LoraSettingsManager(SX1276 *radio);
+    LoraSettingsManager(SX1276 *radio, Logger *logger);
 
     void updateSettings(LoraSettings settings);
     void updateFrequency(float freq, bool callCb = true);
@@ -20,6 +21,7 @@ class LoraSettingsManager {
 
   private:
     SX1276 *radio;
+    Logger *logger;
     LoraSettings settings;
     void (* settingsUpdatedCallback)(LoraSettings settings);
 };

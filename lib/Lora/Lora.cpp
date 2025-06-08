@@ -1,6 +1,6 @@
 #include "lora.h"
 
-Lora::Lora(): settings(&radio) {};
+Lora::Lora() : logger("Lora", true), settings(&radio, &logger)  {}
 
 bool Lora::interruptFlag = false;
 
@@ -11,12 +11,10 @@ void Lora::init(LoraSettings initalSettings) {
   delay(1500);
 
   int state = radio.begin();
-  Serial.print(F("[Lora] Initializing ... "));
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
+    this->logger.log("Module init success");
   } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
+    this->logger.log("Module init failed with code:", state);
     while (true) { delay(10); }
   }
 
@@ -60,8 +58,7 @@ void Lora::check() {
     this->flashLedOn();
     if (this->isTransmitInProgres) {
       if (this->transmissionState != RADIOLIB_ERR_NONE) {
-        Serial.print(F("failed, code "));
-        Serial.println(transmissionState);
+        this->logger.log("Transmission failed:", transmissionState);
       } else {
         if (this->transmitCallback) {
           this->transmitCallback();
@@ -80,8 +77,7 @@ void Lora::check() {
 void Lora::listen() {
   int state = radio.startReceive();
   if (state != RADIOLIB_ERR_NONE) {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
+    this->logger.log("Listen failed:", state);
     while (true) { delay(10); } 
   }
 }

@@ -16,7 +16,7 @@
 
 `CONFIG;FQ=868.0`
 `CONFIG;BW=125`
-`CONFIG;SF=8`
+`CONFIG;SF=10`
 `CONFIG;FQ=867,BW=125` - config
 
 ### Config Sync

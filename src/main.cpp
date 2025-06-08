@@ -26,9 +26,6 @@ void setup() {
 void loraSetup() {
   LoraSettings preferenceSettings = storage.getLoraSettings();
 
-  Serial.println("get settings");
-  Serial.println(preferenceSettings.frequency);
-
   lora.settings.setSettingsUpdatedCallback(settingsUpdatedCallback);
   lora.setReceiveCallback(receiveCallback);
   lora.init(preferenceSettings);

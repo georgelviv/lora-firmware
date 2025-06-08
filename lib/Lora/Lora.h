@@ -2,6 +2,7 @@
 #define LORA_H
 
 #include "Arduino.h"
+#include <Logger.h>
 #include <RadioLib.h>
 #include "LoraSettings.h"
 
@@ -21,6 +22,7 @@ class Lora {
   public:
     Lora();
     LoraSettingsManager settings;
+    Logger logger;
 
     void init(LoraSettings initalSettings);
     void transmit(String msg);

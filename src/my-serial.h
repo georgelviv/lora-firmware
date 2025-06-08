@@ -2,7 +2,7 @@
 #define MY_SERIAL_H
 
 #include <Arduino.h>
-#include <lora.h>
+#include <Lora.h>
 #include "utils.h"
 
 class MySerial {
