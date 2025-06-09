@@ -7,6 +7,8 @@
 #define DEFAULT_CODDING_RATE 6
 #define DEFAULT_TRANSMIT_POWER 10
 #define DEFAULT_SYNC_WORD 0xAB
+#define DEFAULT_IMPLICIT_HEADER 0
+#define DEFAULT_HEADER_SIZE 10
 
 struct LoraSettings {
   float frequency;
@@ -15,6 +17,8 @@ struct LoraSettings {
   int codingRate;
   int syncWord;
   int transmitPower;
+  int implicitHeader;
+  int headerSize;
 };
 
 #endif

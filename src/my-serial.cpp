@@ -31,16 +31,6 @@ void MySerial::handleSerialMessage(String command, String params) {
   }
 }
 
-void MySerial::sendPing(String params) {
-  this->pingStart = millis();
-
-  String messageId = getParam(params, "ID");
-  String msg = "PING;" + formatParams({"ID", messageId});
-  this->pingPendingId = messageId;
-
-  lora->transmit(msg);
-}
-
 void MySerial::parseLoraMessage(String msg) {
   String command = getCommand(msg);
   String params = getParams(msg);
@@ -63,6 +53,17 @@ void MySerial::parseLoraMessage(String msg) {
   }
 }
 
+void MySerial::sendPing(String params) {
+  this->pingStart = millis();
+
+  String messageId = getParam(params, "ID");
+  String msg = "PING;" + formatParams({"ID", messageId});
+  this->pingPendingId = messageId;
+
+  lora->transmit(msg);
+}
+
+
 void MySerial::updateSettings(String str) {
   String configs[5][2];
   int configsCount = parseParams(str, configs);
@@ -76,6 +77,10 @@ void MySerial::updateSettings(String str) {
        this->lora->settings.updateFrequency(val.toFloat());
     } else if (key == "SF") {
        this->lora->settings.updateSpreadingFactor(val.toInt());
+    } else if (key == "IH") {
+       this->lora->settings.updateImplicitHeader(val.toInt());
+    } else if (key == "HS") {
+       this->lora->settings.updateHeaderSize(val.toInt());
     } else {
       Serial.println("Uknown config to update");
       Serial.println(key);
@@ -132,12 +137,20 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   float rssi = lora->getRSSI();
   float snr = lora->getSNR();
 
-  return formatParams({
-    "ID", messageId,
-    "DELAY", String(diff),
-    "RSSI", String(rssi),
-    "SNR", String(snr)
-  });
+  if (messageId != "") {
+    return formatParams({
+      "ID", messageId,
+      "DELAY", String(diff),
+      "RSSI", String(rssi),
+      "SNR", String(snr)
+    });
+  } else {
+    return formatParams({
+      "DELAY", String(diff),
+      "RSSI", String(rssi),
+      "SNR", String(snr)
+    });
+  }
 }
 
 void MySerial::printConfig() {
@@ -149,7 +162,9 @@ void MySerial::printConfig() {
     "BW", String(settings.bandwidth),
     "SF", String(settings.spreagingFactor),
     "CR", String(settings.codingRate),
-    "TP", String(settings.transmitPower)
+    "TP", String(settings.transmitPower),
+    "IH", String(settings.implicitHeader),
+    "HS", String(settings.headerSize)
   }));
 }
 

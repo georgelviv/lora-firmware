@@ -43,5 +43,10 @@ void settingsUpdatedCallback(LoraSettings loraSettings) {
 }
 
 void receiveCallback(String msg) {
+
+  while (msg.endsWith("_")) {
+    msg.remove(msg.length() - 1);
+  }
+
   mySerial.parseLoraMessage(msg);
 }

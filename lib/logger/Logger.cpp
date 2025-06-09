@@ -23,6 +23,12 @@ void Logger::info(String msg, float msg2) {
   }
 }
 
+void Logger::info(String msg, String msg2) {
+  if (this->isVerbose) {
+    this->log(msg, msg2);
+  }
+}
+
 void Logger::log(String msg) {
   Serial.print("[");
   Serial.print(this->context);
@@ -39,6 +45,14 @@ void Logger::log(String msg, int msg2) {
 }
 
 void Logger::log(String msg, float msg2) {
+  Serial.print("[");
+  Serial.print(this->context);
+  Serial.print("] ");
+  Serial.print(msg);
+  Serial.println(msg2);
+}
+
+void Logger::log(String msg, String msg2) {
   Serial.print("[");
   Serial.print(this->context);
   Serial.print("] ");

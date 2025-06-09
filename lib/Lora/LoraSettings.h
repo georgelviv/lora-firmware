@@ -15,6 +15,8 @@ class LoraSettingsManager {
     void updateBandwidth(float bandwidth, bool callCb = true);
     void updateTransmitPower(int transmitPower, bool callCb = true);
     void updateSpreadingFactor(int spreadingFactor, bool callCb = true);
+    void updateImplicitHeader(int isImplicitHeader, bool callCb = true);
+    void updateHeaderSize(int headerSize, bool callCb = true);
   
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();

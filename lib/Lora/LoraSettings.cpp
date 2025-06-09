@@ -10,6 +10,8 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateBandwidth(settings.bandwidth, false);
   this->updateTransmitPower(settings.transmitPower, false);
   this->updateSpreadingFactor(settings.spreagingFactor, false);
+  this->updateImplicitHeader(settings.implicitHeader, false);
+  this->updateHeaderSize(settings.headerSize, false);
 
   if (this->radio->setCodingRate(settings.codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
     Serial.println(F("Selected coding rate is invalid for this module!"));
@@ -105,6 +107,34 @@ void LoraSettingsManager::updateTransmitPower(int transmitPower, bool callCb) {
   }
 
   this->settings.transmitPower = transmitPower;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updateImplicitHeader(int isImplicitHeader, bool callCb) {
+  if (isImplicitHeader) {
+    this->radio->implicitHeader(this->settings.headerSize);
+  } else {
+    this->radio->explicitHeader();
+  }
+
+  this->logger->info("IH updated to:", isImplicitHeader);
+  this->settings.implicitHeader = isImplicitHeader;
+
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updateHeaderSize(int headerSize, bool callCb) {
+  if (this->settings.implicitHeader) {
+    this->radio->implicitHeader(headerSize);
+  }
+
+  this->logger->info("HS updated to:", headerSize);
+  this->settings.headerSize = headerSize;
+
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
   }

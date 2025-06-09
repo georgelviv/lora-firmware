@@ -77,6 +77,16 @@ void Display::setDashboard() {
   oled.setCursor(70, 25);
   oled.println(this->settings.transmitPower);
 
+  oled.setCursor(5, 35);
+  oled.println("IH:");
+  oled.setCursor(25, 35);
+  oled.println(this->settings.implicitHeader);
+
+  oled.setCursor(40, 35);
+  oled.println("HS:");
+  oled.setCursor(60, 35);
+  oled.println(this->settings.headerSize);
+
   oled.display();
 }
 

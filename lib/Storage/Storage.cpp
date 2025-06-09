@@ -18,6 +18,8 @@ LoraSettings Storage::getLoraSettings() {
   settings.codingRate = DEFAULT_CODDING_RATE;
   settings.syncWord = DEFAULT_SYNC_WORD;
   settings.transmitPower = DEFAULT_TRANSMIT_POWER;
+  settings.implicitHeader = DEFAULT_IMPLICIT_HEADER;
+  settings.headerSize = DEFAULT_HEADER_SIZE;
 
   bool frequencyExists = this->preferences.isKey("frequency");
   if (frequencyExists) {
@@ -49,6 +51,16 @@ LoraSettings Storage::getLoraSettings() {
     settings.transmitPower = this->preferences.getInt("transmitPower");
   }
 
+  bool implicitHeaderExists = this->preferences.isKey("implicitHeader");
+  if (implicitHeaderExists) {
+    settings.implicitHeader = this->preferences.getInt("implicitHeader");
+  }
+
+  bool headerSizeExists = this->preferences.isKey("headerSize");
+  if (headerSizeExists) {
+    settings.headerSize = this->preferences.getInt("headerSize");
+  }
+
   return settings;
 }
 
@@ -58,4 +70,7 @@ void Storage::saveLoraSettings(LoraSettings settings) {
   this->preferences.putInt("spreagingFactor", settings.spreagingFactor);
   this->preferences.putInt("codingRate", settings.codingRate);
   this->preferences.putInt("syncWord", settings.syncWord);
+  this->preferences.putInt("transmitPower", settings.transmitPower);
+  this->preferences.putInt("implicitHeader", settings.implicitHeader);
+  this->preferences.putInt("headerSize", settings.headerSize);
 }

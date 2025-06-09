@@ -1,7 +1,9 @@
 # Serial messages
 
+PING_ACK;
+
 ## Ping
-`PING;ID=1` - ping 
+`PING;ID=12` - ping 
 `PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75` - response to ping
 `PING_NO_ACK;ID=1` - no response
 
@@ -12,17 +14,22 @@
 `CF` - Codding rate `6`
 `SF` - Spreading factor `6` - `12`
 `TP` - Transmit power `2` - `20`
+`IH` - Implicit Header `0` or `1`
+`HS` - Header size in bytes
 
 ### Update config 
 
 `CONFIG;FQ=868.0`
 `CONFIG;BW=125`
-`CONFIG;SF=6`
+`CONFIG;SF=10`
+`CONFIG;IH=1,HS=20`
 `CONFIG;FQ=867,BW=125` - config
 
 ### Config Sync
 
 `CONFIG_SYNC;FQ=868.0`
+`CONFIG_SYNC;SF=6`
+
 `CONFIG_SYNC_ACK`
 
 `CONFIG_SYNC_CHECK`

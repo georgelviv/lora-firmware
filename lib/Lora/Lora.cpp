@@ -37,6 +37,21 @@ void Lora::packetSentCallback() {
 }
 
 void Lora::transmit(String msg) {
+  LoraSettings settings = this->settings.getSettings();
+
+  if (settings.implicitHeader) {
+    if (msg.length() > settings.headerSize) {
+      this->logger.log("Message too long for implicit header:", msg);
+      return;
+    }
+
+    int diff = settings.headerSize - msg.length();
+    msg.reserve(settings.headerSize);
+    for (int i = 0; i < diff; i++) {
+      msg += '_';
+    }
+  }
+
   this->transmissionState = this->radio.startTransmit(msg);
   this->isTransmitInProgres = true;
 }
