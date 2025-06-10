@@ -1,6 +1,6 @@
 #include "my-serial.h"
 
-MySerial::MySerial(Lora *lora) {
+MySerial::MySerial(Lora *lora): logger("Serial", true) {
   this->lora = lora;
 }
 
@@ -34,6 +34,8 @@ void MySerial::handleSerialMessage(String command, String params) {
 void MySerial::parseLoraMessage(String msg) {
   String command = getCommand(msg);
   String params = getParams(msg);
+
+  this->logger.info("Incoming Lora command:", command);
 
   if (command == "PING") {
     this->sendPingBack(params);
@@ -98,6 +100,7 @@ void MySerial::sendPingBack(String params) {
 void MySerial::sendConfigSync(String configMsg) {
   this->configSyncStart = millis();
   lora->transmit("CONFIG_SYNC;" + configMsg);
+  this->isConfigPending = true;
 }
 
 void MySerial::syncConfig(String params) {
@@ -109,6 +112,7 @@ void MySerial::syncConfig(String params) {
 }
 
 void MySerial::updateSettingsAndCheck(String params) {
+  this->isConfigPending = false;
   this->updateSettings(params);
   lora->transmit("CONFIG_SYNC_CHECK");
 }
@@ -170,11 +174,21 @@ void MySerial::printConfig() {
 
 void MySerial::checkPending() {
   if (this->pingPendingId != "") {
-    unsigned long passedTime = millis() - this->pingStart;
-    if (passedTime > PING_TIMEOUT) {
+    unsigned long passedPingTime = millis() - this->pingStart;
+    if (passedPingTime > ACK_TIMEOUT) {
       String msg = "PING_NO_ACK;" + formatParams({"ID", this->pingPendingId});
       Serial.println(msg);
       this->pingPendingId = "";
     }
+  }
+
+  if (this->isConfigPending) {
+    unsigned long passedConfigTime = millis() - this->configSyncStart;
+    if (passedConfigTime > ACK_TIMEOUT) {
+      String msg = "CONFIG_SYNC_NO_ACK;";
+      Serial.println(msg);
+      this->configSyncStart = 0;
+    }
+    this->isConfigPending = false;
   }
 }

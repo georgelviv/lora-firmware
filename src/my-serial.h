@@ -3,14 +3,17 @@
 
 #include <Arduino.h>
 #include <Lora.h>
+#include <Logger.h>
 #include "utils.h"
 
-#define PING_TIMEOUT 5000
+#define ACK_TIMEOUT 5000
 
 class MySerial {
   
   public:
     MySerial(Lora *lora);
+    Logger logger;
+
     void parseSerial();
     void parseLoraMessage(String msg);
     void checkPending();
@@ -32,7 +35,9 @@ class MySerial {
 
     unsigned long pingStart = 0;
     String pingPendingId = "";
+  
     unsigned long configSyncStart = 0;
+    bool isConfigPending = false;
 };
 
 #endif

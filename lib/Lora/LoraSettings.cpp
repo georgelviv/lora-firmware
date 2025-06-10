@@ -39,9 +39,9 @@ void LoraSettingsManager::setSettingsUpdatedCallback(void (* callback)(LoraSetti
 void LoraSettingsManager::updateFrequency(float freq, bool callCb) {
   if (this->radio->setFrequency(freq) == RADIOLIB_ERR_INVALID_FREQUENCY) {
     this->logger->log("Selected FQ is invalid for this module:", freq);
-    if (freq != DEFAULT_BANDWIDTH) {
+    if (freq != DEFAULT_FREQUENCY) {
       this->logger->log("Set default FQ:", DEFAULT_FREQUENCY);
-      this->updateFrequency(DEFAULT_BANDWIDTH);
+      this->updateFrequency(DEFAULT_FREQUENCY);
     } else {
       while (true) { delay(10); }
     }

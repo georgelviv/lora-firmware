@@ -7,7 +7,7 @@ int parseParams(String str, String paramsPairs[5][2]) {
   int commaIndex;
   
   while ((commaIndex = str.indexOf(",", startIndex)) != -1) {
-    params[paramIndex] = str.substring(0, commaIndex);
+    params[paramIndex] = str.substring(startIndex, commaIndex);
     startIndex = commaIndex + 1;
     paramIndex++;
   }

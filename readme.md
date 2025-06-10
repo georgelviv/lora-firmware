@@ -19,18 +19,21 @@ PING_ACK;
 
 ### Update config 
 
-`CONFIG;FQ=868.0`
+`CONFIG;FQ=867.0`
 `CONFIG;BW=125`
-`CONFIG;SF=10`
-`CONFIG;IH=1,HS=20`
+`CONFIG;SF=7`
+`CONFIG;IH=0,HS=20,SF=7`
 `CONFIG;FQ=867,BW=125` - config
 
 ### Config Sync
+
+CONFIG;HS=20
 
 `CONFIG_SYNC;FQ=868.0`
 `CONFIG_SYNC;SF=6`
 
 `CONFIG_SYNC_ACK`
+`CONFIG_SYNC_NO_ACK`
 
 `CONFIG_SYNC_CHECK`
 `CONFIG_SYNC_CHECK_ACK`
@@ -41,4 +44,7 @@ PING_ACK;
 ## Ideas
 - Replace String?
 - Add build version
+- Retries?
+- Non brodcast
+- Security
 - OTA?
