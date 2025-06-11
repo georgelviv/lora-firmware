@@ -37,7 +37,10 @@ class MySerial {
     String pingPendingId = "";
   
     unsigned long configSyncStart = 0;
+    unsigned long configCheckStart = 0;
     bool isConfigPending = false;
+    bool isConfigCheckPending = false;
+    LoraSettings fallbackConfigSyncSettings;
 };
 
 #endif

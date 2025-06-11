@@ -26,9 +26,8 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
     while (true);
   }
 
-  this->settings = settings;
   if (this->settingsUpdatedCallback) {
-    this->settingsUpdatedCallback(settings);
+    this->settingsUpdatedCallback(this->settings);
   }
 }
 
@@ -41,14 +40,14 @@ void LoraSettingsManager::updateFrequency(float freq, bool callCb) {
     this->logger->log("Selected FQ is invalid for this module:", freq);
     if (freq != DEFAULT_FREQUENCY) {
       this->logger->log("Set default FQ:", DEFAULT_FREQUENCY);
-      this->updateFrequency(DEFAULT_FREQUENCY);
+      this->updateFrequency(DEFAULT_FREQUENCY, callCb);
+      return;
     } else {
       while (true) { delay(10); }
     }
-  } else {
-    this->logger->info("FQ updated to:", freq);
   }
-
+  
+  this->logger->info("FQ updated to:", freq);
   this->settings.frequency = freq;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
@@ -60,14 +59,14 @@ void LoraSettingsManager::updateBandwidth(float bandwidth, bool callCb) {
     this->logger->log("Selected BW is invalid for this module:", bandwidth);
     if (bandwidth != DEFAULT_BANDWIDTH) {
       this->logger->log("Set default BW:", DEFAULT_BANDWIDTH);
-      this->updateBandwidth(DEFAULT_BANDWIDTH);
+      this->updateBandwidth(DEFAULT_BANDWIDTH, callCb);
+      return;
     } else {
       while (true) { delay(10); }
     }
-  } else {
-    this->logger->info("BW updated to:", bandwidth);
   }
-
+  
+  this->logger->info("BW updated to:", bandwidth);
   this->settings.bandwidth = bandwidth;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
@@ -79,14 +78,14 @@ void LoraSettingsManager::updateSpreadingFactor(int spreagingFactor, bool callCb
     this->logger->log("Selected SF is invalid for this module:", spreagingFactor);
     if (spreagingFactor != DEFAULT_SPREADING_FACTOR) {
       this->logger->log("Set default SF:", DEFAULT_SPREADING_FACTOR);
-      this->updateSpreadingFactor(DEFAULT_SPREADING_FACTOR);
+      this->updateSpreadingFactor(DEFAULT_SPREADING_FACTOR, callCb);
+      return;
     } else {
       while (true) { delay(10); }
     }
-  } else {
-    this->logger->info("SF updated to:", spreagingFactor);
   }
-
+  
+  this->logger->info("SF updated to:", spreagingFactor);
   this->settings.spreagingFactor = spreagingFactor;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
@@ -98,14 +97,14 @@ void LoraSettingsManager::updateTransmitPower(int transmitPower, bool callCb) {
     this->logger->log("Selected TP is invalid for this module:", transmitPower);
     if (transmitPower != DEFAULT_TRANSMIT_POWER) {
       this->logger->log("Set default TP:", DEFAULT_TRANSMIT_POWER);
-      this->updateTransmitPower(DEFAULT_TRANSMIT_POWER);
+      this->updateTransmitPower(DEFAULT_TRANSMIT_POWER, callCb);
+      return;
     } else {
       while (true) { delay(10); }
     }
-  } else {
-    this->logger->info("TP updated to:", transmitPower);
   }
-
+  
+  this->logger->info("TP updated to:", transmitPower);
   this->settings.transmitPower = transmitPower;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);

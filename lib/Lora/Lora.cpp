@@ -22,10 +22,6 @@ void Lora::init(LoraSettings initalSettings) {
   this->radio.setPacketSentAction(Lora::packetSentCallback);
 
   this->settings.updateSettings(initalSettings);
-
-  delay(1000);
-
-  this->listen();
 }
 
 void Lora::packetReceiveCallback() {
@@ -94,6 +90,8 @@ void Lora::listen() {
   if (state != RADIOLIB_ERR_NONE) {
     this->logger.log("Listen failed:", state);
     while (true) { delay(10); } 
+  } else {
+    this->logger.info("Listening");
   }
 }
 

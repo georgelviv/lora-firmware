@@ -100,12 +100,19 @@ void MySerial::sendPingBack(String params) {
 void MySerial::sendConfigSync(String configMsg) {
   this->configSyncStart = millis();
   lora->transmit("CONFIG_SYNC;" + configMsg);
+  
   this->isConfigPending = true;
+
+  this->logger.info("Config sync message sent");
 }
 
 void MySerial::syncConfig(String params) {
   lora->setTransmitCallback([this, params]() {
+    this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
+    Serial.println(this->fallbackConfigSyncSettings.spreagingFactor);
     this->updateSettings(params);
+    this->isConfigCheckPending = true;
+    this->configCheckStart = millis();
   });
 
   lora->transmit("CONFIG_SYNC_ACK;" + params);
@@ -113,7 +120,11 @@ void MySerial::syncConfig(String params) {
 
 void MySerial::updateSettingsAndCheck(String params) {
   this->isConfigPending = false;
+  this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
+  Serial.println(this->fallbackConfigSyncSettings.spreagingFactor);
   this->updateSettings(params);
+  this->isConfigCheckPending = true;
+  this->configCheckStart = millis();
   lora->transmit("CONFIG_SYNC_CHECK");
 }
 
@@ -183,12 +194,23 @@ void MySerial::checkPending() {
   }
 
   if (this->isConfigPending) {
-    unsigned long passedConfigTime = millis() - this->configSyncStart;
-    if (passedConfigTime > ACK_TIMEOUT) {
-      String msg = "CONFIG_SYNC_NO_ACK;";
+    unsigned long passedConfigSyncTime = millis() - this->configSyncStart;
+    if (passedConfigSyncTime > ACK_TIMEOUT) {
+      String msg = "CONFIG_SYNC_NO_ACK";
       Serial.println(msg);
       this->configSyncStart = 0;
+      this->isConfigPending = false;
     }
-    this->isConfigPending = false;
+  }
+
+  if (this->isConfigCheckPending) {
+    unsigned long passedConfigCheckTime = millis() - this->configCheckStart;
+    if (passedConfigCheckTime > ACK_TIMEOUT) {
+      String msg = "CONFIG_SYNC_CHECK_NO_ACK";
+      Serial.println(msg);
+      this->configCheckStart = 0;
+      this->isConfigCheckPending = false;
+      this->lora->settings.updateSettings(this->fallbackConfigSyncSettings);
+    }
   }
 }

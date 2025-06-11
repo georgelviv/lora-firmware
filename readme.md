@@ -27,9 +27,7 @@ PING_ACK;
 
 ### Config Sync
 
-CONFIG;HS=20
-
-`CONFIG_SYNC;FQ=868.0`
+`CONFIG_SYNC;SF=6`
 `CONFIG_SYNC;SF=6`
 
 `CONFIG_SYNC_ACK`
@@ -37,9 +35,14 @@ CONFIG;HS=20
 
 `CONFIG_SYNC_CHECK`
 `CONFIG_SYNC_CHECK_ACK`
+`CONFIG_SYNC_CHECK_NO_ACK`
 
 ### Config Read
 `CONFIG_GET`
+
+## BUG
+Update on 1 module CONFIG;SF=7
+on other send ping
 
 ## Ideas
 - Replace String?

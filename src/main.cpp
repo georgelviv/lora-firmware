@@ -38,6 +38,7 @@ void loop() {
 }
 
 void settingsUpdatedCallback(LoraSettings loraSettings) {
+  lora.listen();
   display.setDashboardSettings(loraSettings);
   storage.saveLoraSettings(loraSettings);
 }

@@ -32,6 +32,7 @@ class Lora {
 
     void setReceiveCallback(void (* callback)(String msg));
     void setTransmitCallback(std::function<void()> callback);
+    void listen();
 
     static void packetReceiveCallback(void);
     static void packetSentCallback(void);
@@ -46,7 +47,6 @@ class Lora {
     void (* receiveCallback)(String msg);
     std::function<void()> transmitCallback;
   
-    void listen();
     void handleReceiveMessage();
     void flashLedOn();
     void flashLedOff();
