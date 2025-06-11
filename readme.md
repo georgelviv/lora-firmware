@@ -16,9 +16,7 @@ PING_ACK;
 `TP` - Transmit power `2` - `20`
 `IH` - Implicit Header `0` or `1`
 `HS` - Header size in bytes
-
-### Config default
-`CONFIG_DEFAULT`
+`SW` - Sync Word `171`
 
 ### Update config 
 
@@ -26,7 +24,7 @@ PING_ACK;
 `CONFIG;BW=125`
 `CONFIG;SF=7`
 `CONFIG;IH=0,HS=20,SF=7`
-`CONFIG;FQ=868,BW=125,SF=7,CR=6,TP=10,IH=0,HS=20` - config
+`CONFIG;FQ=868,BW=125,SF=7,CR=6,TP=10,IH=0,HS=20,SW=171` - default config
 
 ### Config Sync
 

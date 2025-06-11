@@ -13,11 +13,7 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateImplicitHeader(settings.implicitHeader, false);
   this->updateHeaderSize(settings.headerSize, false);
   this->updateCodingRate(settings.codingRate, false);
-
-  // if (this->radio->setSyncWord(settings.syncWord) != RADIOLIB_ERR_NONE) {
-  //   Serial.println(F("Unable to set sync word!"));
-  //   while (true);
-  // }
+  this->updateSyncWord(settings.syncWord, false);
 
   if (this->settingsUpdatedCallback) {
     this->settingsUpdatedCallback(this->settings);
@@ -146,6 +142,25 @@ void LoraSettingsManager::updateCodingRate(int codingRate, bool callCb) {
   
   this->logger->info("CR updated to:", codingRate);
   this->settings.codingRate = codingRate;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updateSyncWord(int syncWord, bool callCb) {
+  if (this->radio->setSyncWord(syncWord) == RADIOLIB_ERR_INVALID_SYNC_WORD) {
+    this->logger->log("Selected SW is invalid for this module:", syncWord);
+    if (syncWord != DEFAULT_SYNC_WORD) {
+      this->logger->log("Set default SW:", DEFAULT_SYNC_WORD);
+      this->updateSyncWord(DEFAULT_SYNC_WORD, callCb);
+      return;
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+  
+  this->logger->info("SW updated to:", syncWord);
+  this->settings.syncWord = syncWord;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
   }

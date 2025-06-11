@@ -67,7 +67,7 @@ void MySerial::sendPing(String params) {
 
 
 void MySerial::updateSettings(String str) {
-  String configs[7][2];
+  String configs[8][2];
   int configsCount = parseParams(str, configs);
 
   for (int i = 0; i < configsCount; i++) {
@@ -87,6 +87,8 @@ void MySerial::updateSettings(String str) {
        this->lora->settings.updateCodingRate(val.toInt());
     } else if (key == "TP") {
        this->lora->settings.updateTransmitPower(val.toInt());
+    } else if (key == "SW") {
+       this->lora->settings.updateSyncWord(val.toInt());
     } else {
       Serial.println("Uknown config to update");
       Serial.println(key);
