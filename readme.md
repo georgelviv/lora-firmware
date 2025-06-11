@@ -11,11 +11,14 @@ PING_ACK;
 
 `FQ` - Frequency `868.0`
 `BW` - Bandwidth `7.8`, `10.4`, `15.6`, `20.8`, `31.25`, `41.7`, `62.5`, `125`, `250`, `500`
-`CF` - Codding rate `6`
+`CR` - Codding rate `6`
 `SF` - Spreading factor `6` - `12`
 `TP` - Transmit power `2` - `20`
 `IH` - Implicit Header `0` or `1`
 `HS` - Header size in bytes
+
+### Config default
+`CONFIG_DEFAULT`
 
 ### Update config 
 
@@ -23,7 +26,7 @@ PING_ACK;
 `CONFIG;BW=125`
 `CONFIG;SF=7`
 `CONFIG;IH=0,HS=20,SF=7`
-`CONFIG;FQ=867,BW=125` - config
+`CONFIG;FQ=868,BW=125,SF=7,CR=6,TP=10,IH=0,HS=20` - config
 
 ### Config Sync
 
@@ -41,8 +44,6 @@ PING_ACK;
 `CONFIG_GET`
 
 ## BUG
-Update on 1 module CONFIG;SF=7
-on other send ping
 
 ## Ideas
 - Replace String?

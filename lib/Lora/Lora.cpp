@@ -21,7 +21,9 @@ void Lora::init(LoraSettings initalSettings) {
   this->radio.setPacketReceivedAction(Lora::packetReceiveCallback);
   this->radio.setPacketSentAction(Lora::packetSentCallback);
 
+  delay(1000);
   this->settings.updateSettings(initalSettings);
+  // this->listen();
 }
 
 void Lora::packetReceiveCallback() {

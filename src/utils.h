@@ -5,7 +5,7 @@
 
 String getCommand(String msg);
 String getParams(String msg);
-int parseParams(String str, String paramsPairs[5][2]);
+int parseParams(String str, String paramsPairs[7][2]);
 String getParam(String params, String lookingParam);
 String formatParams(std::initializer_list<String> args);
 

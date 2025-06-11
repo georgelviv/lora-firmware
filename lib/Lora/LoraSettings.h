@@ -17,6 +17,7 @@ class LoraSettingsManager {
     void updateSpreadingFactor(int spreadingFactor, bool callCb = true);
     void updateImplicitHeader(int isImplicitHeader, bool callCb = true);
     void updateHeaderSize(int headerSize, bool callCb = true);
+    void updateCodingRate(int codingRate, bool callCb = true);
   
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();

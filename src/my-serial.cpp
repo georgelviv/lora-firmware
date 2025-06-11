@@ -67,7 +67,7 @@ void MySerial::sendPing(String params) {
 
 
 void MySerial::updateSettings(String str) {
-  String configs[5][2];
+  String configs[7][2];
   int configsCount = parseParams(str, configs);
 
   for (int i = 0; i < configsCount; i++) {
@@ -76,13 +76,17 @@ void MySerial::updateSettings(String str) {
     if (key == "FQ") {
       this->lora->settings.updateFrequency(val.toFloat());
     } else if (key == "BW") {
-       this->lora->settings.updateFrequency(val.toFloat());
+       this->lora->settings.updateBandwidth(val.toFloat());
     } else if (key == "SF") {
        this->lora->settings.updateSpreadingFactor(val.toInt());
     } else if (key == "IH") {
        this->lora->settings.updateImplicitHeader(val.toInt());
     } else if (key == "HS") {
        this->lora->settings.updateHeaderSize(val.toInt());
+    } else if (key == "CR") {
+       this->lora->settings.updateCodingRate(val.toInt());
+    } else if (key == "TP") {
+       this->lora->settings.updateTransmitPower(val.toInt());
     } else {
       Serial.println("Uknown config to update");
       Serial.println(key);

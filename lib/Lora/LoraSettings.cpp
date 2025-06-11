@@ -12,19 +12,12 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateSpreadingFactor(settings.spreagingFactor, false);
   this->updateImplicitHeader(settings.implicitHeader, false);
   this->updateHeaderSize(settings.headerSize, false);
+  this->updateCodingRate(settings.codingRate, false);
 
-  if (this->radio->setCodingRate(settings.codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
-    Serial.println(F("Selected coding rate is invalid for this module!"));
-    Serial.println(settings.codingRate);
-    settings.codingRate = DEFAULT_CODDING_RATE;
-    this->updateSettings(settings);
-    return;
-  }
-
-  if (this->radio->setSyncWord(settings.syncWord) != RADIOLIB_ERR_NONE) {
-    Serial.println(F("Unable to set sync word!"));
-    while (true);
-  }
+  // if (this->radio->setSyncWord(settings.syncWord) != RADIOLIB_ERR_NONE) {
+  //   Serial.println(F("Unable to set sync word!"));
+  //   while (true);
+  // }
 
   if (this->settingsUpdatedCallback) {
     this->settingsUpdatedCallback(this->settings);
@@ -134,6 +127,25 @@ void LoraSettingsManager::updateHeaderSize(int headerSize, bool callCb) {
   this->logger->info("HS updated to:", headerSize);
   this->settings.headerSize = headerSize;
 
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updateCodingRate(int codingRate, bool callCb) {
+  if (this->radio->setCodingRate(codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
+    this->logger->log("Selected CR is invalid for this module:", codingRate);
+    if (codingRate != DEFAULT_CODDING_RATE) {
+      this->logger->log("Set default CR:", DEFAULT_CODDING_RATE);
+      this->updateCodingRate(DEFAULT_CODDING_RATE, callCb);
+      return;
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+  
+  this->logger->info("CR updated to:", codingRate);
+  this->settings.codingRate = codingRate;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
   }

@@ -1,7 +1,7 @@
 #include "utils.h"
 
-int parseParams(String str, String paramsPairs[5][2]) {
-  String params[5];
+int parseParams(String str, String paramsPairs[7][2]) {
+  String params[7];
   int paramIndex = 0;
   int startIndex = 0;
   int commaIndex;
