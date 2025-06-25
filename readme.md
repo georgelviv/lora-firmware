@@ -7,11 +7,15 @@ PING_ACK;
 `PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75` - response to ping
 `PING_NO_ACK;ID=1` - no response
 
+## Send
+
+`SEND;ID=12,DATA="Test Data Hello"`
+
 ## Config
 
 `FQ` - Frequency `868.0`
 `BW` - Bandwidth `7.8`, `10.4`, `15.6`, `20.8`, `31.25`, `41.7`, `62.5`, `125`, `250`, `500`
-`CR` - Codding rate `6`
+`CR` - Codding rate `5` - `8`
 `SF` - Spreading factor `6` - `12`
 `TP` - Transmit power `2` - `20`
 `IH` - Implicit Header `0` or `1`
@@ -28,8 +32,8 @@ PING_ACK;
 
 ### Config Sync
 
-`CONFIG_SYNC;SF=6`
-`CONFIG_SYNC;SF=6`
+`CONFIG_SYNC;BW=500`
+`CONFIG_SYNC;SF=8`
 
 `CONFIG_SYNC_ACK`
 `CONFIG_SYNC_NO_ACK`

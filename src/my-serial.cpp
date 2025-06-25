@@ -25,6 +25,8 @@ void MySerial::handleSerialMessage(String command, String params) {
     this->sendConfigSync(params);
   } else if (command == "CONFIG_GET") {
     this->printConfig();
+  } else if (command == "SEND") {
+    this->sendData(params);
   } else {
     Serial.print("Unknown message:");
     Serial.println(command);
@@ -49,6 +51,10 @@ void MySerial::parseLoraMessage(String msg) {
     this->sendConfigCheckAck();
   } else if (command == "CONFIG_SYNC_CHECK_ACK") {
     this->printSuccessConfigUpdate(params);
+  } else if (command == "SEND") {
+    this->handleIncomingSend(params);
+  } else if (command == "SEND_ACK") {
+    this->printSendSuccess(params);
   } else {
     Serial.print("Unknown incoming Lora message:");
     Serial.println(msg);
@@ -56,15 +62,25 @@ void MySerial::parseLoraMessage(String msg) {
 }
 
 void MySerial::sendPing(String params) {
-  this->pingStart = millis();
-
   String messageId = getParam(params, "ID");
   String msg = "PING;" + formatParams({"ID", messageId});
   this->pingPendingId = messageId;
-
+  
   lora->transmit(msg);
+  this->pingStart = millis();
 }
 
+void MySerial::sendData(String params) {
+  
+  String messageId = getParam(params, "ID");
+  String data = getParam(params, "DATA");
+  
+  String msg = "SEND;" + formatParams({"ID", messageId, "DATA", data});
+  this->dataPendingId = messageId;
+  
+  lora->transmit(msg);
+  this->dataStart = millis();
+}
 
 void MySerial::updateSettings(String str) {
   String configs[8][2];
@@ -127,7 +143,6 @@ void MySerial::syncConfig(String params) {
 void MySerial::updateSettingsAndCheck(String params) {
   this->isConfigPending = false;
   this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
-  Serial.println(this->fallbackConfigSyncSettings.spreagingFactor);
   this->updateSettings(params);
   this->isConfigCheckPending = true;
   this->configCheckStart = millis();
@@ -147,6 +162,7 @@ void MySerial::sendConfigCheckAck() {
 }
 
 void MySerial::printSuccessConfigUpdate(String params) {
+  this->isConfigCheckPending = false;
   String messageId = getParam(params, "ID");
   Serial.println("CONFIG_SYNC_CHECK_ACK;" +  this->getStatusString(&this->configSyncStart, messageId));
 }
@@ -174,6 +190,26 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   }
 }
 
+void MySerial::handleIncomingSend(String params) {
+  String messageId = getParam(params, "ID");
+  String data = getParam(params, "DATA");
+  String transmitMsg = "SEND_ACK;" + formatParams({"ID", messageId});
+
+  lora->transmit(transmitMsg);
+
+  String msg = "DATA;" + formatParams({"DATA", data});
+  Serial.println(msg);
+}
+
+void MySerial::printSendSuccess(String params) {
+  String messageId = getParam(params, "ID");
+  if (this->dataPendingId == messageId) {
+    String msg = "SEND_ACK;" + formatParams({"ID", messageId});
+    Serial.println(msg);
+    this->dataPendingId = "";
+  }
+}
+
 void MySerial::printConfig() {
   LoraSettings settings = lora->settings.getSettings();
 
@@ -198,6 +234,16 @@ void MySerial::checkPending() {
       this->pingPendingId = "";
     }
   }
+
+  if (this->dataPendingId != "") {
+    unsigned long passedDataTime = millis() - this->dataStart;
+    if (passedDataTime > ACK_TIMEOUT) {
+      String msg = "SEND_NO_ACK;" + formatParams({"ID", this->dataPendingId});
+      Serial.println(msg);
+      this->dataPendingId = "";
+    }
+  }
+
 
   if (this->isConfigPending) {
     unsigned long passedConfigSyncTime = millis() - this->configSyncStart;
