@@ -21,19 +21,20 @@ PING_ACK;
 `IH` - Implicit Header `0` or `1`
 `HS` - Header size in bytes
 `SW` - Sync Word `171`
+`PL` - Preamble length `6` to `65535`
 
 ### Update config 
 
 `CONFIG;FQ=867.0`
 `CONFIG;BW=125`
-`CONFIG;SF=7`
+`CONFIG;IH=1`
 `CONFIG;IH=0,HS=20,SF=7`
 `CONFIG;FQ=868,BW=125,SF=7,CR=6,TP=10,IH=0,HS=20,SW=171` - default config
 
 ### Config Sync
 
 `CONFIG_SYNC;BW=500`
-`CONFIG_SYNC;SF=8`
+`CONFIG_SYNC;IH=0,SF=8`
 
 `CONFIG_SYNC_ACK`
 `CONFIG_SYNC_NO_ACK`

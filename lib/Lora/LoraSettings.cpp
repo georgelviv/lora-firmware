@@ -14,6 +14,7 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateHeaderSize(settings.headerSize, false);
   this->updateCodingRate(settings.codingRate, false);
   this->updateSyncWord(settings.syncWord, false);
+  this->updatePreambleLength(settings.preambleLength, false);
 
   if (this->settingsUpdatedCallback) {
     this->settingsUpdatedCallback(this->settings);
@@ -161,6 +162,25 @@ void LoraSettingsManager::updateSyncWord(int syncWord, bool callCb) {
   
   this->logger->info("SW updated to:", syncWord);
   this->settings.syncWord = syncWord;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
+void LoraSettingsManager::updatePreambleLength(int preambleLength, bool callCb) {
+  if (this->radio->setPreambleLength(preambleLength) == RADIOLIB_ERR_INVALID_PREAMBLE_LENGTH ) {
+    this->logger->log("Selected PL is invalid for this module:", preambleLength);
+    if (preambleLength != DEFAULT_PREAMBLE_LENGTH) {
+      this->logger->log("Set default PL:", DEFAULT_PREAMBLE_LENGTH);
+      this->updatePreambleLength(DEFAULT_PREAMBLE_LENGTH, callCb);
+      return;
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+  
+  this->logger->info("PL updated to:", preambleLength);
+  this->settings.preambleLength = preambleLength;
   if (this->settingsUpdatedCallback && callCb) {
     this->settingsUpdatedCallback(settings);
   }

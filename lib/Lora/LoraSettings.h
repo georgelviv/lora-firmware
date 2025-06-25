@@ -19,6 +19,7 @@ class LoraSettingsManager {
     void updateHeaderSize(int headerSize, bool callCb = true);
     void updateCodingRate(int codingRate, bool callCb = true);
     void updateSyncWord(int syncWord, bool callCb = true);
+    void updatePreambleLength(int preambleLength, bool callCb = true);
   
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();

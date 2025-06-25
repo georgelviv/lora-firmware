@@ -66,7 +66,7 @@ void MySerial::sendPing(String params) {
   String msg = "PING;" + formatParams({"ID", messageId});
   this->pingPendingId = messageId;
   
-  lora->transmit(msg);
+  this->msgTOA = lora->transmit(msg);
   this->pingStart = millis();
 }
 
@@ -105,8 +105,10 @@ void MySerial::updateSettings(String str) {
        this->lora->settings.updateTransmitPower(val.toInt());
     } else if (key == "SW") {
        this->lora->settings.updateSyncWord(val.toInt());
+    } else if (key == "PL") {
+       this->lora->settings.updatePreambleLength(val.toInt());
     } else {
-      Serial.println("Uknown config to update");
+      Serial.println("Unknown config to update");
       Serial.println(key);
     }
   }
@@ -121,7 +123,7 @@ void MySerial::sendPingBack(String params) {
 
 void MySerial::sendConfigSync(String configMsg) {
   this->configSyncStart = millis();
-  lora->transmit("CONFIG_SYNC;" + configMsg);
+  this->msgTOA = lora->transmit("CONFIG_SYNC;" + configMsg);
   
   this->isConfigPending = true;
 
@@ -179,13 +181,15 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "ID", messageId,
       "DELAY", String(diff),
       "RSSI", String(rssi),
-      "SNR", String(snr)
+      "SNR", String(snr),
+      "TOA", String(this->msgTOA)
     });
   } else {
     return formatParams({
       "DELAY", String(diff),
       "RSSI", String(rssi),
-      "SNR", String(snr)
+      "SNR", String(snr),
+      "TOA", String(this->msgTOA)
     });
   }
 }

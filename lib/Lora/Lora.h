@@ -25,7 +25,7 @@ class Lora {
     Logger logger;
 
     void init(LoraSettings initalSettings);
-    void transmit(String msg);
+    int transmit(String msg);
     void check();
     float getRSSI();
     float getSNR();
@@ -50,6 +50,7 @@ class Lora {
     void handleReceiveMessage();
     void flashLedOn();
     void flashLedOff();
+    int getTOA(String msg);
 };
 
 #endif

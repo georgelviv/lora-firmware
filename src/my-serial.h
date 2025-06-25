@@ -47,6 +47,8 @@ class MySerial {
     bool isConfigPending = false;
     bool isConfigCheckPending = false;
     LoraSettings fallbackConfigSyncSettings;
+
+    int msgTOA = 0;
 };
 
 #endif

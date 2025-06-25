@@ -34,13 +34,13 @@ void Lora::packetSentCallback() {
   Lora::interruptFlag = true;
 }
 
-void Lora::transmit(String msg) {
+int Lora::transmit(String msg) {
   LoraSettings settings = this->settings.getSettings();
 
   if (settings.implicitHeader) {
     if (msg.length() > settings.headerSize) {
       this->logger.log("Message too long for implicit header:", msg);
-      return;
+      return 0;
     }
 
     int diff = settings.headerSize - msg.length();
@@ -52,6 +52,8 @@ void Lora::transmit(String msg) {
 
   this->transmissionState = this->radio.startTransmit(msg);
   this->isTransmitInProgres = true;
+
+  return this->getTOA(msg);
 }
 
 void Lora::flashLedOn() {
@@ -114,6 +116,12 @@ float Lora::getRSSI() {
 
 float Lora::getSNR() {
   return radio.getSNR();
+}
+
+int Lora::getTOA(String msg) {
+  int payloadLength = strlen(msg.c_str());  
+  float time = this->radio.getTimeOnAir(payloadLength) / 1000;
+  return static_cast<int>(time); 
 }
 
 void Lora::setReceiveCallback(void (* callback)(String msg)) {
