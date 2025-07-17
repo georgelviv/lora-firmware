@@ -48,7 +48,7 @@ class MySerial {
     bool isConfigCheckPending = false;
     LoraSettings fallbackConfigSyncSettings;
 
-    int msgTOA = 0;
+    int payloadSize = 0;
 };
 
 #endif

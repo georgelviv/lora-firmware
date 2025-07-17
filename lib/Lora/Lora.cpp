@@ -53,7 +53,7 @@ int Lora::transmit(String msg) {
   this->transmissionState = this->radio.startTransmit(msg);
   this->isTransmitInProgres = true;
 
-  return this->getTOA(msg);
+  return strlen(msg.c_str());  
 }
 
 void Lora::flashLedOn() {
@@ -118,8 +118,7 @@ float Lora::getSNR() {
   return radio.getSNR();
 }
 
-int Lora::getTOA(String msg) {
-  int payloadLength = strlen(msg.c_str());  
+int Lora::getTOA(int payloadLength) { 
   float time = this->radio.getTimeOnAir(payloadLength) / 1000;
   return static_cast<int>(time); 
 }

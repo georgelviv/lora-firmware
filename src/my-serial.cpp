@@ -66,7 +66,7 @@ void MySerial::sendPing(String params) {
   String msg = "PING;" + formatParams({"ID", messageId});
   this->pingPendingId = messageId;
   
-  this->msgTOA = lora->transmit(msg);
+  this->payloadSize = lora->transmit(msg);
   this->pingStart = millis();
 }
 
@@ -123,7 +123,7 @@ void MySerial::sendPingBack(String params) {
 
 void MySerial::sendConfigSync(String configMsg) {
   this->configSyncStart = millis();
-  this->msgTOA = lora->transmit("CONFIG_SYNC;" + configMsg);
+  this->payloadSize = lora->transmit("CONFIG_SYNC;" + configMsg);
   
   this->isConfigPending = true;
 
@@ -175,6 +175,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   *startTime = 0;
   float rssi = lora->getRSSI();
   float snr = lora->getSNR();
+  int toa = lora->getTOA(this->payloadSize);
+  int bps = int(((float)this->payloadSize) / (float)toa * 1000.0);
 
   if (messageId != "") {
     return formatParams({
@@ -182,14 +184,16 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "DELAY", String(diff),
       "RSSI", String(rssi),
       "SNR", String(snr),
-      "TOA", String(this->msgTOA)
+      "TOA", String(toa),
+      "BPS", String(bps)
     });
   } else {
     return formatParams({
       "DELAY", String(diff),
       "RSSI", String(rssi),
       "SNR", String(snr),
-      "TOA", String(this->msgTOA)
+      "TOA", String(toa),
+      "BPS", String(bps)
     });
   }
 }
@@ -201,14 +205,14 @@ void MySerial::handleIncomingSend(String params) {
 
   lora->transmit(transmitMsg);
 
-  String msg = "DATA;" + formatParams({"DATA", data});
+  String msg = "DATA;" + formatParams({"DATA", data}) + "," + this->getStatusString(&this->pingStart, messageId);
   Serial.println(msg);
 }
 
 void MySerial::printSendSuccess(String params) {
   String messageId = getParam(params, "ID");
   if (this->dataPendingId == messageId) {
-    String msg = "SEND_ACK;" + formatParams({"ID", messageId});
+    String msg = "SEND_ACK;" + this->getStatusString(&this->pingStart, messageId);
     Serial.println(msg);
     this->dataPendingId = "";
   }

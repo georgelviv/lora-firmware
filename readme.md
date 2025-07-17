@@ -4,12 +4,14 @@ PING_ACK;
 
 ## Ping
 `PING;ID=12` - ping 
-`PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75` - response to ping
+`PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75б,TOA=25,BPS=400` - response to ping
 `PING_NO_ACK;ID=1` - no response
 
 ## Send
 
 `SEND;ID=12,DATA="Test Data Hello"`
+
+`SEND;ID=12,DATA="Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee"`
 
 ## Config
 
@@ -45,6 +47,7 @@ PING_ACK;
 
 ### Config Read
 `CONFIG_GET`
+
 
 ## BUG
 
