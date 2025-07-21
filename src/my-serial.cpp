@@ -77,7 +77,7 @@ void MySerial::sendData(String params) {
   
   String msg = "SEND;" + formatParams({"ID", messageId, "DATA", data});
   this->dataPendingId = messageId;
-  
+
   lora->transmit(msg);
   this->dataStart = millis();
 }

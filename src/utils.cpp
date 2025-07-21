@@ -1,30 +1,39 @@
 #include "utils.h"
 
 int parseParams(String str, String paramsPairs[8][2]) {
-  String params[8];
   int paramIndex = 0;
-  int startIndex = 0;
-  int commaIndex;
-  
-  while ((commaIndex = str.indexOf(",", startIndex)) != -1) {
-    params[paramIndex] = str.substring(startIndex, commaIndex);
-    startIndex = commaIndex + 1;
-    paramIndex++;
+  int length = str.length();
+  bool inQuotes = false;
+  String current = "";
+
+  for (int i = 0; i < length; i++) {
+    char c = str[i];
+    if (c == '"') {
+      inQuotes = !inQuotes;
+    }
+    if (c == ',' && !inQuotes) {
+      int eqIndex = current.indexOf('=');
+      if (eqIndex != -1) {
+        paramsPairs[paramIndex][0] = current.substring(0, eqIndex);
+        paramsPairs[paramIndex][1] = current.substring(eqIndex + 1);
+        paramIndex++;
+      }
+      current = "";
+    } else {
+      current += c;
+    }
   }
 
-  params[paramIndex] = str.substring(startIndex);
-
-  for (int i = 0; i < paramIndex + 1; i++) {
-    String param = params[i];
-    int eqIndex = param.indexOf('=');
-    String key = param.substring(0, eqIndex);
-    String val = param.substring(eqIndex + 1);
-
-    paramsPairs[i][0] = key;
-    paramsPairs[i][1] = val;
+  if (current.length() > 0) {
+    int eqIndex = current.indexOf('=');
+    if (eqIndex != -1) {
+      paramsPairs[paramIndex][0] = current.substring(0, eqIndex);
+      paramsPairs[paramIndex][1] = current.substring(eqIndex + 1);
+      paramIndex++;
+    }
   }
 
-  return paramIndex + 1;
+  return paramIndex;
 }
 
 String getCommand(String msg) {
