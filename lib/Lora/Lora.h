@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include <Logger.h>
 #include <RadioLib.h>
+#include <vector>
 #include "LoraSettings.h"
 
 #define RADIO_SCLK_PIN 5
@@ -47,10 +48,18 @@ class Lora {
     int transmissionState = RADIOLIB_ERR_NONE;
     void (* receiveCallback)(String msg);
     std::function<void()> transmitCallback;
+
+    std::vector<String> chunksToTransmit;
+    int currentChunkIndex = 0;
+
+    std::vector<String> receivedChunks;
   
     void handleReceiveMessage();
     void flashLedOn();
     void flashLedOff();
+    void splitTransmitMessage(String msg);
+    void transmitChunk();
+    void onTransmitDone();
 };
 
 #endif

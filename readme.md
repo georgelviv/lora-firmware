@@ -11,7 +11,7 @@ PING_ACK;
 
 `SEND;ID=12,DATA="Test Data Hello"`
 
-`SEND;ID=12,DATA="Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols."`
+`SEND;ID=12,DATA="Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols."`
 
 ## Config
 

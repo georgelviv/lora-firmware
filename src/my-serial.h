@@ -40,6 +40,7 @@ class MySerial {
     String pingPendingId = "";
 
     unsigned long dataStart = 0;
+    unsigned long dataPendingStart = 0;
     String dataPendingId = "";
   
     unsigned long configSyncStart = 0;

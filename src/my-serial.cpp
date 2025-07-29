@@ -71,15 +71,18 @@ void MySerial::sendPing(String params) {
 }
 
 void MySerial::sendData(String params) {
-  
+  lora->setTransmitCallback([this, params]() {
+    String messageId = getParam(params, "ID");
+    this->dataPendingId = messageId;
+    this->dataPendingStart = millis();
+  });
+
   String messageId = getParam(params, "ID");
   String data = getParam(params, "DATA");
-  
   String msg = "SEND;" + formatParams({"ID", messageId, "DATA", data});
-  this->dataPendingId = messageId;
 
-  lora->transmit(msg);
   this->dataStart = millis();
+  this->payloadSize = lora->transmit(msg);
 }
 
 void MySerial::updateSettings(String str) {
@@ -212,7 +215,7 @@ void MySerial::handleIncomingSend(String params) {
 void MySerial::printSendSuccess(String params) {
   String messageId = getParam(params, "ID");
   if (this->dataPendingId == messageId) {
-    String msg = "SEND_ACK;" + this->getStatusString(&this->pingStart, messageId);
+    String msg = "SEND_ACK;" + this->getStatusString(&this->dataStart, messageId);
     Serial.println(msg);
     this->dataPendingId = "";
   }
@@ -244,7 +247,7 @@ void MySerial::checkPending() {
   }
 
   if (this->dataPendingId != "") {
-    unsigned long passedDataTime = millis() - this->dataStart;
+    unsigned long passedDataTime = millis() - this->dataPendingStart;
     if (passedDataTime > ACK_TIMEOUT) {
       String msg = "SEND_NO_ACK;" + formatParams({"ID", this->dataPendingId});
       Serial.println(msg);

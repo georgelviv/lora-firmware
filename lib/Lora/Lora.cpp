@@ -23,7 +23,6 @@ void Lora::init(LoraSettings initalSettings) {
 
   delay(1000);
   this->settings.updateSettings(initalSettings);
-  // this->listen();
 }
 
 void Lora::packetReceiveCallback() {
@@ -35,25 +34,43 @@ void Lora::packetSentCallback() {
 }
 
 int Lora::transmit(String msg) {
-  LoraSettings settings = this->settings.getSettings();
+  this->splitTransmitMessage(msg);
 
-  if (settings.implicitHeader) {
-    if (msg.length() > settings.headerSize) {
-      this->logger.log("Message too long for implicit header:", msg);
-      return 0;
-    }
-
-    int diff = settings.headerSize - msg.length();
-    msg.reserve(settings.headerSize);
-    for (int i = 0; i < diff; i++) {
-      msg += '_';
-    }
-  }
-
-  this->transmissionState = this->radio.startTransmit(msg);
-  this->isTransmitInProgres = true;
+  this->transmitChunk();
 
   return strlen(msg.c_str());  
+}
+
+void Lora::transmitChunk() {
+  String currentChunk = this->chunksToTransmit[this->currentChunkIndex];
+  this->transmissionState = this->radio.startTransmit(currentChunk);
+  this->isTransmitInProgres = true;
+}
+
+void Lora::splitTransmitMessage(String msg) {
+  this->currentChunkIndex = 0;
+  this->chunksToTransmit.clear();
+
+  LoraSettings settings = this->settings.getSettings();
+
+  int chunkSize = settings.implicitHeader ? settings.headerSize : 200;
+  int totalChunks = ceil((float)msg.length() / chunkSize);
+
+  for (int i = 0; i < totalChunks; i++) {
+    int start = i * chunkSize;
+    String chunk = msg.substring(start, start + chunkSize);
+    String framedChunk = "[" + String(i + 1) + "/" + String(totalChunks) + "]" + chunk;
+
+    if (settings.implicitHeader) {
+      int diff = settings.headerSize - framedChunk.length();
+      framedChunk.reserve(settings.headerSize);
+      for (int j = 0; j < diff; j++) {
+        framedChunk += '_';
+      }
+    }
+
+    this->chunksToTransmit.push_back(framedChunk);
+  }
 }
 
 void Lora::flashLedOn() {
@@ -75,12 +92,8 @@ void Lora::check() {
       if (this->transmissionState != RADIOLIB_ERR_NONE) {
         this->logger.log("Transmission failed:", transmissionState);
       } else {
-        if (this->transmitCallback) {
-          this->transmitCallback();
-        }
+        this->onTransmitDone();
       }
-      this->isTransmitInProgres = false;
-      this->listen();
     } else {
       this->handleReceiveMessage();
     }
@@ -103,9 +116,38 @@ void Lora::handleReceiveMessage() {
   String payload = "0";
   
   int state = radio.readData(payload);
-  if (state == RADIOLIB_ERR_NONE) {  
-    if (this->receiveCallback) {
-      this->receiveCallback(payload);
+  if (state != RADIOLIB_ERR_NONE) {
+    this->logger.log("Error receive", state);
+    return;
+  }
+
+  int startBracket = payload.indexOf('[');
+  int endBracket = payload.indexOf(']');
+
+  if (startBracket != -1 && endBracket != -1 && endBracket > startBracket) {
+    String header = payload.substring(startBracket + 1, endBracket);
+    int slashIndex = header.indexOf('/');
+
+    if (slashIndex != -1) {
+      int partNum = header.substring(0, slashIndex).toInt();
+      int totalParts = header.substring(slashIndex + 1).toInt();
+
+      String messageContent = payload.substring(endBracket + 1);
+      this->receivedChunks.push_back(messageContent);
+
+      if (partNum == totalParts) {
+        String fullString = "";
+        for (int i = 0; i < this->receivedChunks.size(); i++) {
+          String chunk = this->receivedChunks[i];
+          fullString += chunk;
+        }
+
+        if (this->receiveCallback) {
+          this->receiveCallback(fullString);
+        }
+        
+        this->receivedChunks.clear();
+      }
     }
   }
 }
@@ -129,4 +171,17 @@ void Lora::setReceiveCallback(void (* callback)(String msg)) {
 
 void Lora::setTransmitCallback(std::function<void()> callback) {
   this->transmitCallback = callback;
+}
+
+void Lora::onTransmitDone() {
+  this->isTransmitInProgres = false;
+  if (this->currentChunkIndex + 1 >= this->chunksToTransmit.size()) {
+    this->listen();
+    if (this->transmitCallback) {
+      this->transmitCallback();
+    }
+  } else {
+    this->currentChunkIndex = this->currentChunkIndex + 1;
+    this->transmitChunk();
+  }
 }
