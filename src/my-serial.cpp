@@ -66,7 +66,9 @@ void MySerial::sendPing(String params) {
   String msg = "PING;" + formatParams({"ID", messageId});
   this->pingPendingId = messageId;
   
-  this->payloadSize = lora->transmit(msg);
+  auto result = lora->transmit(msg);
+  this->payloadSize = result.first;
+  this->chunksCount = result.second;
   this->pingStart = millis();
 }
 
@@ -82,7 +84,9 @@ void MySerial::sendData(String params) {
   String msg = "SEND;" + formatParams({"ID", messageId, "DATA", data});
 
   this->dataStart = millis();
-  this->payloadSize = lora->transmit(msg);
+  auto result = lora->transmit(msg);
+  this->payloadSize = result.first;
+  this->chunksCount = result.second;
 }
 
 void MySerial::updateSettings(String str) {
@@ -126,7 +130,9 @@ void MySerial::sendPingBack(String params) {
 
 void MySerial::sendConfigSync(String configMsg) {
   this->configSyncStart = millis();
-  this->payloadSize = lora->transmit("CONFIG_SYNC;" + configMsg);
+  auto result = lora->transmit("CONFIG_SYNC;" + configMsg);
+  this->payloadSize = result.first;
+  this->chunksCount = result.second;
   
   this->isConfigPending = true;
 
@@ -180,6 +186,7 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   float snr = lora->getSNR();
   int toa = lora->getTOA(this->payloadSize);
   int bps = int(((float)this->payloadSize) / (float)toa * 1000.0);
+  int chunksCount = this->chunksCount;
 
   if (messageId != "") {
     return formatParams({
@@ -188,7 +195,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RSSI", String(rssi),
       "SNR", String(snr),
       "TOA", String(toa),
-      "BPS", String(bps)
+      "BPS", String(bps),
+      "CHC", String(chunksCount)
     });
   } else {
     return formatParams({
@@ -196,7 +204,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RSSI", String(rssi),
       "SNR", String(snr),
       "TOA", String(toa),
-      "BPS", String(bps)
+      "BPS", String(bps),
+      "CHC", String(chunksCount)
     });
   }
 }

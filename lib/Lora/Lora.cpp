@@ -33,12 +33,15 @@ void Lora::packetSentCallback() {
   Lora::interruptFlag = true;
 }
 
-int Lora::transmit(String msg) {
+std::pair<int, int> Lora::transmit(String msg) {
   this->splitTransmitMessage(msg);
 
   this->transmitChunk();
 
-  return strlen(msg.c_str());  
+  int byteCount = strlen(msg.c_str());
+  int chunkCount = this->chunksToTransmit.size();
+
+  return std::make_pair(byteCount, chunkCount); 
 }
 
 void Lora::transmitChunk() {

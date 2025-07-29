@@ -6,6 +6,7 @@
 #include <RadioLib.h>
 #include <vector>
 #include "LoraSettings.h"
+#include <utility>
 
 #define RADIO_SCLK_PIN 5
 #define RADIO_MISO_PIN 19
@@ -26,7 +27,7 @@ class Lora {
     Logger logger;
 
     void init(LoraSettings initalSettings);
-    int transmit(String msg);
+    std::pair<int, int> transmit(String msg);
     void check();
     float getRSSI();
     float getSNR();

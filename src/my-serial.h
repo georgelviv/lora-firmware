@@ -50,6 +50,7 @@ class MySerial {
     LoraSettings fallbackConfigSyncSettings;
 
     int payloadSize = 0;
+    int chunksCount = 0;
 };
 
 #endif
