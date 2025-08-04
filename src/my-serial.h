@@ -6,7 +6,7 @@
 #include <Logger.h>
 #include "utils.h"
 
-#define ACK_TIMEOUT 5000
+#define ACK_TIMEOUT 25000
 
 class MySerial {
   

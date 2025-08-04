@@ -70,6 +70,8 @@ void MySerial::sendPing(String params) {
   this->payloadSize = result.first;
   this->chunksCount = result.second;
   this->pingStart = millis();
+
+  this->logger.info("Ping message sent");
 }
 
 void MySerial::sendData(String params) {
@@ -142,7 +144,6 @@ void MySerial::sendConfigSync(String configMsg) {
 void MySerial::syncConfig(String params) {
   lora->setTransmitCallback([this, params]() {
     this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
-    Serial.println(this->fallbackConfigSyncSettings.spreagingFactor);
     this->updateSettings(params);
     this->isConfigCheckPending = true;
     this->configCheckStart = millis();
@@ -277,7 +278,7 @@ void MySerial::checkPending() {
 
   if (this->isConfigCheckPending) {
     unsigned long passedConfigCheckTime = millis() - this->configCheckStart;
-    if (passedConfigCheckTime > ACK_TIMEOUT) {
+    if (passedConfigCheckTime > ACK_TIMEOUT * 2) {
       String msg = "CONFIG_SYNC_CHECK_NO_ACK";
       Serial.println(msg);
       this->configCheckStart = 0;
