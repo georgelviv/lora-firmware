@@ -19,7 +19,7 @@ PING_ACK;
 `BW` - Bandwidth `7.8`, `10.4`, `15.6`, `20.8`, `31.25`, `41.7`, `62.5`, `125`, `250`, `500`
 `CR` - Codding rate `5` - `8`
 `SF` - Spreading factor `6` - `12`
-`TP` - Transmit power `2` - `20`
+`TP` - Transmit power `2` - `20` (`18` and `19` not allowed)
 `IH` - Implicit Header `0` or `1`
 `HS` - Header size in bytes
 `SW` - Sync Word `171`

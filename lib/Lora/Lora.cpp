@@ -61,8 +61,10 @@ void Lora::splitTransmitMessage(String msg) {
 
   for (int i = 0; i < totalChunks; i++) {
     int start = i * chunkSize;
-    String chunk = msg.substring(start, start + chunkSize);
-    String framedChunk = "[" + String(i + 1) + "/" + String(totalChunks) + "]" + chunk;
+    String header = "[" + String(i + 1) + "/" + String(totalChunks) + "]";
+    int bodySize = chunkSize - header.length();
+    String body = msg.substring(start, start + bodySize);
+    String framedChunk = header + body;
 
     if (settings.implicitHeader) {
       int diff = settings.headerSize - framedChunk.length();
