@@ -6,7 +6,7 @@
 #include <Logger.h>
 #include "utils.h"
 
-#define ACK_TIMEOUT 25000
+#define ACK_TIMEOUT 10000
 
 class MySerial {
   
@@ -22,32 +22,31 @@ class MySerial {
     Lora *lora;
     void handleSerialMessage(String command, String params);
     void sendPing(String params);
-    void sendPingBack(String params);
+    void handlePing(String params);
     void sendData(String params);
     void sendConfigSync(String configMsg);
     void updateSettings(String params);
-    void syncConfig(String params);
-    void updateSettingsAndCheck(String params);
-    void printPingSuccess(String params);
-    void sendConfigCheckAck();
+    void handleIncomingConfigSync(String params);
+    void handleConfigSyncAck(String params);
+    void handlePingAck(String params);
+    void handleConfigSyncCheck(String params);
     void handleIncomingSend(String params);
-    void printSendSuccess(String params);
-    void printSuccessConfigUpdate(String params);
+    void handleSendAck(String params);
+    void handleIncomingConfigSyncCheck(String params);
     String getStatusString(unsigned long* startTime, String params);
     void printConfig();
 
-    unsigned long pingStart = 0;
-    String pingPendingId = "";
+    void sendLora(String msg);
+    void prepareTransmit(String params, String command);
+    void handleAck(String params, String command);
+    void sendAck(String params, String command);
 
-    unsigned long dataStart = 0;
-    unsigned long dataPendingStart = 0;
-    String dataPendingId = "";
-  
-    unsigned long configSyncStart = 0;
-    unsigned long configCheckStart = 0;
-    bool isConfigPending = false;
-    bool isConfigCheckPending = false;
+    unsigned long pendingTimeoutStart = 0;
+    unsigned long pendingStart = 0;
+    String pendingId = "";
+    String pendingTimeoutMsg = "";
     LoraSettings fallbackConfigSyncSettings;
+    String settingsToUpdateOnTransmit = "";
 
     int payloadSize = 0;
     int chunksCount = 0;

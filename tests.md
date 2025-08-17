@@ -11,10 +11,10 @@
 `PING_ACK;ID=12,DELAY=604,RSSI=-32.00,SNR=7.50,TOA=232,BPS=43,CHC=1`
 
 
-CONFIG_SYNC;SF=11
-CONFIG;SF=12,IH=0
+CONFIG_SYNC;ID=12,SF=8
+CONFIG;SF=12
 CONFIG;
 
-
+SEND;ID=12,DATA="Sending "
 
 SEND;ID=12,DATA="Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols. Sending long message to check how lora works. Even larger than you thought. Maybe one day you will receive this message, but this is not guarantee. Transmission over LoRa is slow, but stable for long distances. However, bandwidth is limited, so optimization is key when designing communication protocols...."

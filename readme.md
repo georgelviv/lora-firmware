@@ -2,10 +2,20 @@
 
 PING_ACK;
 
+## Formats
+
+`{COMMAND};` - send command
+`{COMMAND};PARAM=VAL,PARAM2=VAL2` - send command with params
+
+`{COMMAND}_NO_ACK;ID=1` - no ack
+`{COMMAND}_ACK;ID=1` - ack
+
+
 ## Ping
 `PING;ID=12` - ping 
+
+### Ping response
 `PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75б,TOA=25,BPS=400` - response to ping
-`PING_NO_ACK;ID=1` - no response
 
 ## Send
 
@@ -35,15 +45,10 @@ PING_ACK;
 
 ### Config Sync
 
-`CONFIG_SYNC;BW=500`
-`CONFIG_SYNC;IH=0,SF=8`
-
-`CONFIG_SYNC_ACK`
-`CONFIG_SYNC_NO_ACK`
+`CONFIG_SYNC;ID=12,BW=500`
+`CONFIG_SYNC;ID=12,IH=0,SF=8`
 
 `CONFIG_SYNC_CHECK`
-`CONFIG_SYNC_CHECK_ACK`
-`CONFIG_SYNC_CHECK_NO_ACK`
 
 ### Config Read
 `CONFIG_GET`
@@ -52,9 +57,7 @@ PING_ACK;
 ## BUG
 
 ## Ideas
-- Replace String?
-- Add build version
-- Retries?
-- Non brodcast
-- Security
-- OTA?
+- Send Message sent
+- Proper timeout sent
+- Recovery
+- clear pendings
