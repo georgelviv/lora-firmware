@@ -24,6 +24,8 @@ class LoraSettingsManager {
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();
 
+    void setDefaultSettings();
+
   private:
     SX1276 *radio;
     Logger *logger;

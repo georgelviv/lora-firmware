@@ -27,7 +27,11 @@ void MySerial::handleSerialMessage(String command, String params) {
     this->printConfig();
   } else if (command == "SEND") {
     this->sendData(params);
-  } else {
+  } else if (command == "CONFIG_RESET") {
+    this->handleConfigReset();
+  } else if (command == "CONFIG_RESET_SYNC") {
+    this->handleConfigResetSync(params);
+  }else {
     Serial.print("Unknown message:");
     Serial.println(command);
   }
@@ -55,6 +59,14 @@ void MySerial::parseLoraMessage(String msg) {
     this->handleIncomingSend(params);
   } else if (command == "SEND_ACK") {
     this->handleSendAck(params);
+  } else if (command == "CONFIG_RESET_SYNC") {
+    this->handleIncomingConfigResetSync(params);
+  } else if (command == "CONFIG_RESET_SYNC_ACK") {
+    this->handleIncomingConfigResetSyncAck(params);
+  } else if (command == "CONFIG_RESET_SYNC_CHECK") {
+    this->handleIncomingConfigResetSyncCheck(params);
+  } else if (command == "CONFIG_RESET_SYNC_CHECK_ACK") {
+    this->handleIncomingConfigResetSyncCheckAck(params);
   } else {
     Serial.print("Unknown incoming Lora message:");
     Serial.println(msg);
@@ -264,7 +276,8 @@ void MySerial::printConfig() {
     "CR", String(settings.codingRate),
     "TP", String(settings.transmitPower),
     "IH", String(settings.implicitHeader),
-    "HS", String(settings.headerSize)
+    "HS", String(settings.headerSize),
+    "PL", String(settings.preambleLength)
   }));
 }
 
@@ -281,4 +294,70 @@ void MySerial::checkPending() {
 void MySerial::handleChunkReceived(int chunk, int totalChunks) {
   String msg = "Received " + String(chunk) + " of " + String(totalChunks) + " chunks";
   this->logger.info(msg);
+}
+
+void MySerial::handleConfigReset() {
+  this->lora->settings.setDefaultSettings();
+}
+
+void MySerial::handleConfigResetSync(String params) {
+  this->prepareTransmit(params, "CONFIG_RESET_SYNC");
+  String msg = "CONFIG_RESET_SYNC;" + params;
+  this->sendLora(msg);
+}
+
+void MySerial::handleIncomingConfigResetSync(String params) {
+  this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
+  String defaultParams = formatParams({
+    "FW", String(DEFAULT_FREQUENCY),
+    "BW", String(DEFAULT_BANDWIDTH),
+    "SF", String(DEFAULT_SPREADING_FACTOR),
+    "CR", String(DEFAULT_CODDING_RATE),
+    "TP", String(DEFAULT_TRANSMIT_POWER),
+    "IH", String(DEFAULT_IMPLICIT_HEADER),
+    "HS", String(DEFAULT_HEADER_SIZE),
+    "PL", String(DEFAULT_PREAMBLE_LENGTH)
+  });
+
+  this->settingsToUpdateOnTransmit = defaultParams;
+
+  this->prepareTransmit(params, "CONFIG_RESET_SYNC_ACK");
+  String msg = "CONFIG_RESET_SYNC_ACK;" + params;
+
+  this->sendLora(msg);
+}
+
+void MySerial::handleIncomingConfigResetSyncAck(String params) {
+  this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
+  String defaultParams = formatParams({
+    "FW", String(DEFAULT_FREQUENCY),
+    "BW", String(DEFAULT_BANDWIDTH),
+    "SF", String(DEFAULT_SPREADING_FACTOR),
+    "CR", String(DEFAULT_CODDING_RATE),
+    "TP", String(DEFAULT_TRANSMIT_POWER),
+    "IH", String(DEFAULT_IMPLICIT_HEADER),
+    "HS", String(DEFAULT_HEADER_SIZE),
+    "PL", String(DEFAULT_PREAMBLE_LENGTH)
+  });
+  this->updateSettings(defaultParams);
+  
+  this->prepareTransmit(params, "CONFIG_RESET_SYNC_CHECK");
+
+  String messageId = getParam(params, "ID");
+  String msg = "CONFIG_RESET_SYNC_CHECK;" + formatParams({"ID", messageId});
+
+  this->sendLora(msg);
+}
+
+void MySerial::handleIncomingConfigResetSyncCheck(String params) {
+  this->prepareTransmit(params, "CONFIG_RESET_SYNC_CHECK_ACK");
+
+  String messageId = getParam(params, "ID");
+  String msg = "CONFIG_RESET_SYNC_CHECK_ACK;" + formatParams({"ID", messageId});
+
+  this->sendLora(msg);
+}
+
+void MySerial::handleIncomingConfigResetSyncCheckAck(String params) {
+  this->handleAck(params, "CONFIG_RESET_SYNC_CHECK");
 }

@@ -36,6 +36,13 @@ class MySerial {
     void handleIncomingConfigSyncCheck(String params);
     String getStatusString(unsigned long* startTime, String params);
     void printConfig();
+    void handleConfigReset();
+  
+    void handleConfigResetSync(String params);
+    void handleIncomingConfigResetSync(String params);
+    void handleIncomingConfigResetSyncAck(String params);
+    void handleIncomingConfigResetSyncCheck(String params);
+    void handleIncomingConfigResetSyncCheckAck(String params);
 
     void sendLora(String msg);
     void prepareTransmit(String params, String command);

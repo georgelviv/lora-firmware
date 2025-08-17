@@ -189,3 +189,18 @@ void LoraSettingsManager::updatePreambleLength(int preambleLength, bool callCb) 
 LoraSettings LoraSettingsManager::getSettings() {
   return this->settings;
 }
+
+void LoraSettingsManager::setDefaultSettings() {
+  LoraSettings defaultSettings = {
+    DEFAULT_FREQUENCY,
+    DEFAULT_BANDWIDTH,
+    DEFAULT_SPREADING_FACTOR,
+    DEFAULT_CODDING_RATE,
+    DEFAULT_SYNC_WORD,
+    DEFAULT_TRANSMIT_POWER,
+    DEFAULT_IMPLICIT_HEADER,
+    DEFAULT_HEADER_SIZE,
+    DEFAULT_PREAMBLE_LENGTH
+  };
+  this->updateSettings(defaultSettings);
+}

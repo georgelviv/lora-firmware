@@ -1,6 +1,6 @@
-# Serial messages
+# Lora Firmware
 
-PING_ACK;
+Very simple lora firmware. Developed for SX1276 bases on esp32
 
 ## Formats
 
@@ -53,8 +53,8 @@ PING_ACK;
 ### Config Read
 `CONFIG_GET`
 
+### Config Reset
+`CONFIG_RESET`
 
-## BUG
-
-## Ideas
-- Recovery
+### Config SYNC Reset
+`CONFIG_RESET_SYNC`
