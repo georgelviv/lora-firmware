@@ -57,7 +57,4 @@ PING_ACK;
 ## BUG
 
 ## Ideas
-- Send Message sent
-- Proper timeout sent
 - Recovery
-- clear pendings

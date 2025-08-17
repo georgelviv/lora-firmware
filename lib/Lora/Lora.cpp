@@ -152,6 +152,10 @@ void Lora::handleReceiveMessage() {
         }
         
         this->receivedChunks.clear();
+      } else {
+        if (this->receiveChunkCallback) {
+          this->receiveChunkCallback(partNum, totalParts);
+        }
       }
     }
   }
@@ -170,6 +174,10 @@ int Lora::getTOA(int payloadLength) {
   return static_cast<int>(time); 
 }
 
+void Lora::setReceiveChunkCallback(void (* callback)(int chunk, int totalChunks)) {
+  this->receiveChunkCallback = callback;
+}
+
 void Lora::setReceiveCallback(void (* callback)(String msg)) {
   this->receiveCallback = callback;
 }
@@ -178,8 +186,13 @@ void Lora::setTransmitCallback(std::function<void()> callback) {
   this->transmitCallback = callback;
 }
 
+void Lora::setTransmitChunkCallback(std::function<void(int, int)> callback) {
+  this->transmitChunkCallback = callback;
+}
+
 void Lora::onTransmitDone() {
   this->isTransmitInProgres = false;
+  int totalChunks = this->chunksToTransmit.size();
   if (this->currentChunkIndex + 1 >= this->chunksToTransmit.size()) {
     this->listen();
     if (this->transmitCallback) {
@@ -188,5 +201,8 @@ void Lora::onTransmitDone() {
   } else {
     this->currentChunkIndex = this->currentChunkIndex + 1;
     this->transmitChunk();
+    if (this->transmitChunkCallback) {
+      this->transmitChunkCallback(this->currentChunkIndex, totalChunks);
+    }
   }
 }

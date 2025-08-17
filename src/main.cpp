@@ -12,6 +12,7 @@ Storage storage;
 
 void settingsUpdatedCallback(LoraSettings settings);
 void receiveCallback(String msg);
+void receiveChunkCallback(int chunk, int totalChunks);
 void loraSetup();
 
 void setup() {
@@ -28,6 +29,7 @@ void loraSetup() {
 
   lora.settings.setSettingsUpdatedCallback(settingsUpdatedCallback);
   lora.setReceiveCallback(receiveCallback);
+  lora.setReceiveChunkCallback(receiveChunkCallback);
   lora.init(preferenceSettings);
 }
 
@@ -50,4 +52,8 @@ void receiveCallback(String msg) {
   }
 
   mySerial.parseLoraMessage(msg);
+}
+
+void receiveChunkCallback(int chunk, int totalChunks) {
+  mySerial.handleChunkReceived(chunk, totalChunks);
 }

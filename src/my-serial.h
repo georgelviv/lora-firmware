@@ -17,6 +17,7 @@ class MySerial {
     void parseSerial();
     void parseLoraMessage(String msg);
     void checkPending();
+    void handleChunkReceived(int chunk, int totalChunks);
 
   private:
     Lora *lora;

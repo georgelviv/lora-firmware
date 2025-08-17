@@ -81,6 +81,10 @@ void MySerial::prepareTransmit(String params, String command) {
     this->logger.info(command + " message sent");
   });
 
+  lora->setTransmitChunkCallback([this, command](int currentChunk, int totalChunks) {
+    this->logger.info(command + " " + currentChunk + " of " + totalChunks + " chunk sent");
+  });
+
   this->logger.info(command + " command accepted");
   String messageId = getParam(params, "ID");
   this->pendingTimeoutMsg = command + "_NO_ACK;" + formatParams({"ID", messageId});
@@ -272,4 +276,9 @@ void MySerial::checkPending() {
       this->pendingId = "";
     }
   }
+}
+
+void MySerial::handleChunkReceived(int chunk, int totalChunks) {
+  String msg = "Received " + String(chunk) + " of " + String(totalChunks) + " chunks";
+  this->logger.info(msg);
 }

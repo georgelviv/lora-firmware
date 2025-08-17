@@ -33,7 +33,9 @@ class Lora {
     float getSNR();
 
     void setReceiveCallback(void (* callback)(String msg));
+    void setReceiveChunkCallback(void (* callback)(int, int));
     void setTransmitCallback(std::function<void()> callback);
+    void setTransmitChunkCallback(std::function<void(int, int)> callback);
     void listen();
     int getTOA(int payloadLength);
 
@@ -48,7 +50,9 @@ class Lora {
     uint32_t lastFlashTime = 0;
     int transmissionState = RADIOLIB_ERR_NONE;
     void (* receiveCallback)(String msg);
+    void (* receiveChunkCallback)(int chunk, int totalChunks);
     std::function<void()> transmitCallback;
+    std::function<void(int chunk, int totalChunks)> transmitChunkCallback;
 
     std::vector<String> chunksToTransmit;
     int currentChunkIndex = 0;
