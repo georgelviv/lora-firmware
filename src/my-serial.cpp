@@ -17,6 +17,8 @@ void MySerial::parseSerial() {
 }
 
 void MySerial::handleSerialMessage(String command, String params) {
+  this->logger.info("Incoming Serial command: ", command);
+
   if (command == "PING") {
     this->sendPing(params);
   } else if (command == "CONFIG") {
@@ -91,6 +93,8 @@ void MySerial::prepareTransmit(String params, String command) {
     this->pendingTimeoutStart = millis();
 
     this->logger.info(command + " message sent");
+
+    lora->setTransmitCallback(nullptr);
   });
 
   lora->setTransmitChunkCallback([this, command](int currentChunk, int totalChunks) {

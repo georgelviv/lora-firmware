@@ -78,7 +78,7 @@ String formatParams(std::initializer_list<String> args) {
 }
 
 String getParam(String params, String lookingParam) {
-  String parsedParams[5][2];
+  String parsedParams[7][2];
   int paramsCount = parseParams(params, parsedParams);
 
   for (int i = 0; i < paramsCount; i++) {
