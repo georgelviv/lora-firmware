@@ -186,6 +186,25 @@ void LoraSettingsManager::updatePreambleLength(int preambleLength, bool callCb) 
   }
 }
 
+void LoraSettingsManager::updateCurrentLimit(int currentLimit, bool callCb) {
+  if (this->radio->setPreambleLength(currentLimit) == RADIOLIB_ERR_INVALID_CURRENT_LIMIT ) {
+    this->logger->log("Selected CL is invalid for this module:", currentLimit);
+    if (currentLimit != DEFAULT_CURRENT_LIMIT) {
+      this->logger->log("Set default CL:", DEFAULT_CURRENT_LIMIT);
+      this->updateCurrentLimit(DEFAULT_CURRENT_LIMIT, callCb);
+      return;
+    } else {
+      while (true) { delay(10); }
+    }
+  }
+  
+  this->logger->info("CL updated to:", currentLimit);
+  this->settings.currentLimit = currentLimit;
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
 LoraSettings LoraSettingsManager::getSettings() {
   return this->settings;
 }
@@ -200,7 +219,8 @@ void LoraSettingsManager::setDefaultSettings() {
     DEFAULT_TRANSMIT_POWER,
     DEFAULT_IMPLICIT_HEADER,
     DEFAULT_HEADER_SIZE,
-    DEFAULT_PREAMBLE_LENGTH
+    DEFAULT_PREAMBLE_LENGTH,
+    DEFAULT_CURRENT_LIMIT
   };
   this->updateSettings(defaultSettings);
 }

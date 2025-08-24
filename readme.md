@@ -28,7 +28,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `FQ` - Frequency `868.0` mhz
 `BW` - Bandwidth `7.8`, `10.4`, `15.6`, `20.8`, `31.25`, `41.7`, `62.5`, `125`, `250`, `500` khz
 `CR` - Codding rate `5` - `8`
-`CL` - Current limit `45` - `240` mA with step `5` (`45` - `120`) or `10` (`120` - `240`)
+`CL` - Current limit (OCP over current protection) `45` - `240` mA with step `5` (`45` - `120`) or `10` (`120` - `240`)
 `SF` - Spreading factor `6` - `12`
 `TP` - Transmit power `2` - `20` (`18` and `19` not allowed) dBm
 `IH` - Implicit Header `0` or `1`
@@ -42,6 +42,8 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `CONFIG;BW=125`
 `CONFIG;TP=20`
 `CONFIG;PL=10`
+`CONFIG;CR=6`
+`CONFIG;CL=55,TP=16`
 `CONFIG;IH=0,HS=20,SF=7`
 `CONFIG;FQ=868,BW=125,SF=7,CR=6,TP=10,IH=0,HS=20,SW=171` - default config
 
@@ -49,6 +51,8 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 
 `CONFIG_SYNC;ID=12,TP=10`
 `CONFIG_SYNC;ID=12,IH=0,SF=8`
+
+CONFIG_SYNC;ID=12,SF=12,IH=0
 
 `CONFIG_SYNC_CHECK`
 
@@ -60,11 +64,3 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 
 ### Config SYNC Reset
 `CONFIG_RESET_SYNC`
-
-
----
-FQ BW
-SW SF
-CR PL
-TP CL
-IH HS

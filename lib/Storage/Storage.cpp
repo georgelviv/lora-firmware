@@ -21,6 +21,7 @@ LoraSettings Storage::getLoraSettings() {
   settings.implicitHeader = DEFAULT_IMPLICIT_HEADER;
   settings.headerSize = DEFAULT_HEADER_SIZE;
   settings.preambleLength = DEFAULT_PREAMBLE_LENGTH;
+  settings.currentLimit = DEFAULT_CURRENT_LIMIT;
 
   bool frequencyExists = this->preferences.isKey("frequency");
   if (frequencyExists) {
@@ -67,6 +68,11 @@ LoraSettings Storage::getLoraSettings() {
     settings.preambleLength = this->preferences.getInt("preambleLength");
   }
 
+  bool currentLimitExists = this->preferences.isKey("currentLimit");
+  if (currentLimitExists) {
+    settings.currentLimit = this->preferences.getInt("currentLimit");
+  }
+
   return settings;
 }
 
@@ -80,4 +86,5 @@ void Storage::saveLoraSettings(LoraSettings settings) {
   this->preferences.putInt("implicitHeader", settings.implicitHeader);
   this->preferences.putInt("headerSize", settings.headerSize);
   this->preferences.putInt("preambleLength", settings.preambleLength);
+  this->preferences.putInt("currentLimit", settings.currentLimit);
 }

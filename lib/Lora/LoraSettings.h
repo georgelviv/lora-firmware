@@ -20,6 +20,7 @@ class LoraSettingsManager {
     void updateCodingRate(int codingRate, bool callCb = true);
     void updateSyncWord(int syncWord, bool callCb = true);
     void updatePreambleLength(int preambleLength, bool callCb = true);
+    void updateCurrentLimit(int currentLimit, bool callCb = true);
   
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();

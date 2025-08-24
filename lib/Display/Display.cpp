@@ -101,7 +101,7 @@ void Display::setDashboard() {
   oled.setCursor(row2Key, line4);
   oled.println("CL:");
   oled.setCursor(row2Value, line4);
-  oled.println(110);
+  oled.println(this->settings.currentLimit);
 
   // Line 5
   oled.setCursor(row1Key, line5);
