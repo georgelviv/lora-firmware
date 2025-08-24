@@ -18,6 +18,11 @@ enum DisplayState {
   DISPLAY_TMP_MESSAGE
 };
 
+struct DashboardItem {
+  const char* key;
+  float value;
+};
+
 class Display {
 
   public:
@@ -26,7 +31,7 @@ class Display {
     void setState(DisplayState state);
     void setDashboardSettings(LoraSettings settings);
     void check();
-    void showTempMsg(String msg);
+    void showTempMsg(String msg1, String ms2);
 
   private:
     Adafruit_SSD1306 oled;
@@ -37,7 +42,8 @@ class Display {
     void setDashboard();
     void setTempMsg();
 
-    String tmpMsg = "";
+    String tmpMsg1;
+    String tmpMsg2;
     unsigned long tmpMsgStart = 0;
 };
 

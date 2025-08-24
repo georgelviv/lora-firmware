@@ -50,72 +50,39 @@ void Display::setDashboard() {
   oled.setTextColor(SSD1306_WHITE);
   oled.setTextSize(1);
 
-  int row1Key = 5;
-  int row2Key = 70;
-  int row1Value = 25;
-  int row2Value = 90;
+  DashboardItem items[] = {
+    {"FQ:", settings.frequency},
+    {"BW:", settings.bandwidth},
+    {"SW:", (float)settings.syncWord},
+    {"SF:", (float)settings.spreagingFactor},
+    {"CR:", (float)settings.codingRate},
+    {"PL:", (float)settings.preambleLength},
+    {"TP:", (float)settings.transmitPower},
+    {"CL:", (float)settings.currentLimit},
+    {"IH:", (float)settings.implicitHeader},
+    {"HS:", (float)settings.headerSize},
+  };
 
-  int line1 = 5;
-  int line2 = 15;
-  int line3 = 25;
-  int line4 = 35;
-  int line5 = 45;
+  int colKey[] = {5, 70};
+  int colValue[] = {25, 90};
+  int line[] = {5, 15, 25, 35, 45};
 
-  // Line 1
-  oled.setCursor(row1Key, line1);
-  oled.println("FQ:");
-  oled.setCursor(row1Value, line1);
-  oled.println(this->settings.frequency);
+  int itemCount = sizeof(items) / sizeof(items[0]);
 
-  oled.setCursor(row2Key, line1);
-  oled.println("BW:");
-  oled.setCursor(row2Value, line1);
-  oled.println(this->settings.bandwidth);
+  for (int i = 0; i < itemCount; i++) {
+    int col = i % 2;
+    int row = i / 2;
 
-  //Line 2
-  oled.setCursor(row1Key, line2);
-  oled.println("SW:");
-  oled.setCursor(row1Value, line2);
-  oled.println(this->settings.syncWord);
+    int keyX = colKey[col];
+    int valX = colValue[col];
+    int y = line[row];
 
-  oled.setCursor(row2Key, line2);
-  oled.println("SF:");
-  oled.setCursor(row2Value, line2);
-  oled.println(this->settings.spreagingFactor);
+    oled.setCursor(keyX, y);
+    oled.println(items[i].key);
 
-  // Line 3
-  oled.setCursor(row1Key, line3);
-  oled.println("CR:");
-  oled.setCursor(row1Value, line3);
-  oled.println(this->settings.codingRate);
-
-  oled.setCursor(row2Key, line3);
-  oled.println("PL:");
-  oled.setCursor(row2Value, line3);
-  oled.println(this->settings.preambleLength);
-
-
-  // Line 4
-  oled.setCursor(row1Key, line4);
-  oled.println("TP:");
-  oled.setCursor(row1Value, line4);
-  oled.println(this->settings.transmitPower);
-
-  oled.setCursor(row2Key, line4);
-  oled.println("CL:");
-  oled.setCursor(row2Value, line4);
-  oled.println(this->settings.currentLimit);
-
-  // Line 5
-  oled.setCursor(row1Key, line5);
-  oled.println("IH:");
-  oled.setCursor(row1Value, line5);
-  oled.println(this->settings.implicitHeader);
-
-  oled.setCursor(row2Key, line5);
-  oled.println("HS:");
-  oled.setCursor(row2Value, line5);
-  oled.println(this->settings.headerSize);
+    oled.setCursor(valX, y);
+    oled.println(items[i].value);
+  }
 
   oled.display();
 }
@@ -127,9 +94,10 @@ void Display::setDashboardSettings(LoraSettings settings) {
   }
 }
 
-void Display::showTempMsg(String msg) {
+void Display::showTempMsg(String msg1, String msg2) {
   this->tmpMsgStart = millis();
-  this->tmpMsg = msg;
+  this->tmpMsg1 = msg1;
+  this->tmpMsg2 = msg2;
   this->setState(DISPLAY_TMP_MESSAGE);
 }
 
@@ -138,7 +106,10 @@ void Display::setTempMsg() {
   oled.setTextColor(SSD1306_WHITE);
   oled.setCursor(10, 10);
   oled.setTextSize(1);
-  oled.println(this->tmpMsg);
+  oled.println(this->tmpMsg1);
+
+  oled.setCursor(10, 20);
+  oled.println(this->tmpMsg2);
   oled.display();
 }
 

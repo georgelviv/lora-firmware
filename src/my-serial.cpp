@@ -20,7 +20,7 @@ void MySerial::parseSerial() {
 void MySerial::handleSerialMessage(String command, String params) {
   this->logger.info("Incoming Serial command: ", command);
 
-  this->display->showTempMsg(command);
+  this->display->showTempMsg("Serial", command);
 
   if (command == "PING") {
     this->sendPing(params);
@@ -46,6 +46,7 @@ void MySerial::parseLoraMessage(String msg) {
   String command = getCommand(msg);
   String params = getParams(msg);
 
+  this->display->showTempMsg("Lora", command);
   this->logger.info("Incoming Lora command: ", command);
 
   if (command == "PING") {
