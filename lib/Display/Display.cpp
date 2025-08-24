@@ -46,50 +46,72 @@ void Display::setDashboard() {
   oled.clearDisplay();
   oled.setTextColor(SSD1306_WHITE);
   oled.setTextSize(1);
-  
-  oled.setCursor(5, 5);
+
+  int row1Key = 5;
+  int row2Key = 70;
+  int row1Value = 25;
+  int row2Value = 90;
+
+  int line1 = 5;
+  int line2 = 15;
+  int line3 = 25;
+  int line4 = 35;
+  int line5 = 45;
+
+  // Line 1
+  oled.setCursor(row1Key, line1);
   oled.println("FQ:");
-  oled.setCursor(25, 5);
+  oled.setCursor(row1Value, line1);
   oled.println(this->settings.frequency);
 
-  oled.setCursor(70, 5);
-  oled.println("SF:");
-  oled.setCursor(90, 5);
-  oled.println(this->settings.spreagingFactor);
-
-  oled.setCursor(5, 15);
+  oled.setCursor(row2Key, line1);
   oled.println("BW:");
-  oled.setCursor(25, 15);
+  oled.setCursor(row2Value, line1);
   oled.println(this->settings.bandwidth);
 
-  oled.setCursor(70, 15);
-  oled.println("CR:");
-  oled.setCursor(90, 15);
-  oled.println(this->settings.codingRate);
-
-  oled.setCursor(5, 25);
+  //Line 2
+  oled.setCursor(row1Key, line2);
   oled.println("SW:");
-  oled.setCursor(25, 25);
+  oled.setCursor(row1Value, line2);
   oled.println(this->settings.syncWord);
 
-  oled.setCursor(50, 25);
-  oled.println("TP:");
-  oled.setCursor(70, 25);
-  oled.println(this->settings.transmitPower);
+  oled.setCursor(row2Key, line2);
+  oled.println("SF:");
+  oled.setCursor(row2Value, line2);
+  oled.println(this->settings.spreagingFactor);
 
-  oled.setCursor(85, 25);
+  // Line 3
+  oled.setCursor(row1Key, line3);
+  oled.println("CR:");
+  oled.setCursor(row1Value, line3);
+  oled.println(this->settings.codingRate);
+
+  oled.setCursor(row2Key, line3);
   oled.println("PL:");
-  oled.setCursor(105, 25);
+  oled.setCursor(row2Value, line3);
   oled.println(this->settings.preambleLength);
 
-  oled.setCursor(5, 35);
+
+  // Line 4
+  oled.setCursor(row1Key, line4);
+  oled.println("TP:");
+  oled.setCursor(row1Value, line4);
+  oled.println(this->settings.transmitPower);
+
+  oled.setCursor(row2Key, line4);
+  oled.println("CL:");
+  oled.setCursor(row2Value, line4);
+  oled.println(110);
+
+  // Line 5
+  oled.setCursor(row1Key, line5);
   oled.println("IH:");
-  oled.setCursor(25, 35);
+  oled.setCursor(row1Value, line5);
   oled.println(this->settings.implicitHeader);
 
-  oled.setCursor(40, 35);
+  oled.setCursor(row2Key, line5);
   oled.println("HS:");
-  oled.setCursor(60, 35);
+  oled.setCursor(row2Value, line5);
   oled.println(this->settings.headerSize);
 
   oled.display();
