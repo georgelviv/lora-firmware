@@ -1,7 +1,8 @@
 #include "my-serial.h"
 
-MySerial::MySerial(Lora *lora): logger("Serial", true) {
+MySerial::MySerial(Lora *lora, Display *display): logger("Serial", true) {
   this->lora = lora;
+  this->display = display;
 }
 
 void MySerial::parseSerial() {
@@ -18,6 +19,8 @@ void MySerial::parseSerial() {
 
 void MySerial::handleSerialMessage(String command, String params) {
   this->logger.info("Incoming Serial command: ", command);
+
+  this->display->showTempMsg(command);
 
   if (command == "PING") {
     this->sendPing(params);

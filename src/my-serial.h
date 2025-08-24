@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Lora.h>
 #include <Logger.h>
+#include <Display.h>
 #include "utils.h"
 
 #define ACK_TIMEOUT 10000
@@ -11,7 +12,7 @@
 class MySerial {
   
   public:
-    MySerial(Lora *lora);
+    MySerial(Lora *lora, Display *display);
     Logger logger;
 
     void parseSerial();
@@ -21,6 +22,8 @@ class MySerial {
 
   private:
     Lora *lora;
+    Display *display;
+  
     void handleSerialMessage(String command, String params);
     void sendPing(String params);
     void handlePing(String params);

@@ -7,7 +7,7 @@
 
 Lora lora;
 Display display;
-MySerial mySerial(&lora);
+MySerial mySerial(&lora, &display);
 Storage storage;
 
 void settingsUpdatedCallback(LoraSettings settings);
@@ -37,6 +37,7 @@ void loop() {
   mySerial.parseSerial();
   lora.check();
   mySerial.checkPending();
+  display.check();
 }
 
 void settingsUpdatedCallback(LoraSettings loraSettings) {

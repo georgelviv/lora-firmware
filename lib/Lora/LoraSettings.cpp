@@ -15,6 +15,7 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateCodingRate(settings.codingRate, false);
   this->updateSyncWord(settings.syncWord, false);
   this->updatePreambleLength(settings.preambleLength, false);
+  this->updateCurrentLimit(settings.currentLimit, false);
 
   if (this->settingsUpdatedCallback) {
     this->settingsUpdatedCallback(this->settings);

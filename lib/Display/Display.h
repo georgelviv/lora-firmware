@@ -5,6 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <ProjectConstants.h>
+#include <Arduino.h>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -13,7 +14,8 @@
 
 enum DisplayState {
   DISPLAY_INIT,
-  DISPLAY_DASHBOARD
+  DISPLAY_DASHBOARD,
+  DISPLAY_TMP_MESSAGE
 };
 
 class Display {
@@ -23,6 +25,8 @@ class Display {
     bool init();
     void setState(DisplayState state);
     void setDashboardSettings(LoraSettings settings);
+    void check();
+    void showTempMsg(String msg);
 
   private:
     Adafruit_SSD1306 oled;
@@ -31,6 +35,10 @@ class Display {
 
     void setInit();
     void setDashboard();
+    void setTempMsg();
+
+    String tmpMsg = "";
+    unsigned long tmpMsgStart = 0;
 };
 
 #endif

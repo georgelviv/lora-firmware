@@ -30,6 +30,9 @@ void Display::setState(DisplayState state) {
     case DISPLAY_DASHBOARD:
       this->setDashboard();
       break;
+    case DISPLAY_TMP_MESSAGE:
+      this->setTempMsg();
+      break;
   }
 }
 
@@ -121,5 +124,29 @@ void Display::setDashboardSettings(LoraSettings settings) {
   this->settings = settings;
   if (this->currentState == DISPLAY_DASHBOARD) {
     this->setDashboard();
+  }
+}
+
+void Display::showTempMsg(String msg) {
+  this->tmpMsgStart = millis();
+  this->tmpMsg = msg;
+  this->setState(DISPLAY_TMP_MESSAGE);
+}
+
+void Display::setTempMsg() {
+  oled.clearDisplay();
+  oled.setTextColor(SSD1306_WHITE);
+  oled.setCursor(10, 10);
+  oled.setTextSize(1);
+  oled.println(this->tmpMsg);
+  oled.display();
+}
+
+void Display::check() {
+  if (this->currentState == DISPLAY_TMP_MESSAGE) {
+    unsigned long passedTime = millis() - this->tmpMsgStart;
+    if (passedTime > 2000) {
+      this->setState(DISPLAY_DASHBOARD);
+    }
   }
 }
