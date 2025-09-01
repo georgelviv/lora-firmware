@@ -1,6 +1,6 @@
 #include "lora.h"
 
-Lora::Lora() : logger("Lora", true), settings(&radio, &logger)  {}
+Lora::Lora(): settings(&radio, nullptr)  {}
 
 bool Lora::interruptFlag = false;
 
@@ -10,11 +10,15 @@ void Lora::init(LoraSettings initalSettings) {
 
   delay(1500);
 
+  this->logger = new Logger("Lora", true);
+
+  this->settings.logger = this->logger;
+
   int state = radio.begin();
   if (state == RADIOLIB_ERR_NONE) {
-    this->logger.log("Module init success");
+    this->logger->log("Module init success");
   } else {
-    this->logger.log("Module init failed with code:", state);
+    this->logger->log("Module init failed with code:", state);
     while (true) { delay(10); }
   }
 
@@ -95,7 +99,7 @@ void Lora::check() {
     this->flashLedOn();
     if (this->isTransmitInProgres) {
       if (this->transmissionState != RADIOLIB_ERR_NONE) {
-        this->logger.log("Transmission failed:", transmissionState);
+        this->logger->log("Transmission failed:", transmissionState);
       } else {
         this->onTransmitDone();
       }
@@ -110,10 +114,10 @@ void Lora::check() {
 void Lora::listen() {
   int state = radio.startReceive();
   if (state != RADIOLIB_ERR_NONE) {
-    this->logger.log("Listen failed:", state);
+    this->logger->log("Listen failed:", state);
     while (true) { delay(10); } 
   } else {
-    this->logger.info("Listening");
+    this->logger->info("Listening");
   }
 }
 
@@ -122,7 +126,7 @@ void Lora::handleReceiveMessage() {
   
   int state = radio.readData(payload);
   if (state != RADIOLIB_ERR_NONE) {
-    this->logger.log("Error receive", state);
+    this->logger->log("Error receive", state);
     return;
   }
 

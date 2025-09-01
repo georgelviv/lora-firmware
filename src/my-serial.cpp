@@ -234,6 +234,8 @@ void MySerial::updateSettings(String str) {
        this->lora->settings.updatePreambleLength(val.toInt());
     } else if (key == "CL") {
        this->lora->settings.updateCurrentLimit(val.toInt());
+    } else if (key == "RT") {
+       this->lora->settings.updateRetry(val.toInt());
     } else if (key == "ID") {
       continue;
     } else {
@@ -288,7 +290,8 @@ void MySerial::printConfig() {
     "IH", String(settings.implicitHeader),
     "HS", String(settings.headerSize),
     "PL", String(settings.preambleLength),
-    "CL", String(settings.currentLimit)
+    "CL", String(settings.currentLimit),
+    "RT", String(settings.retry),
   }));
 }
 
@@ -328,7 +331,8 @@ void MySerial::handleIncomingConfigResetSync(String params) {
     "IH", String(DEFAULT_IMPLICIT_HEADER),
     "HS", String(DEFAULT_HEADER_SIZE),
     "PL", String(DEFAULT_PREAMBLE_LENGTH),
-    "CL", String(DEFAULT_PREAMBLE_LENGTH)
+    "CL", String(DEFAULT_PREAMBLE_LENGTH),
+    "RT", String(DEFAULT_RETRY)
   });
 
   this->settingsToUpdateOnTransmit = defaultParams;
@@ -350,7 +354,8 @@ void MySerial::handleIncomingConfigResetSyncAck(String params) {
     "IH", String(DEFAULT_IMPLICIT_HEADER),
     "HS", String(DEFAULT_HEADER_SIZE),
     "PL", String(DEFAULT_PREAMBLE_LENGTH),
-    "CL", String(DEFAULT_CURRENT_LIMIT)
+    "CL", String(DEFAULT_CURRENT_LIMIT),
+    "RT", String(DEFAULT_RETRY)
   });
   this->updateSettings(defaultParams);
   

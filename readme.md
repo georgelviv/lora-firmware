@@ -35,7 +35,8 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `HS` - Header size in bytes
 `SW` - Sync Word `171`
 `PL` - Preamble length `6` to `65535`
-
+`RT` - Retry `0` to `10`.  `0` means no retries
+ 
 ### Update config 
 
 `CONFIG;FQ=867.0`
@@ -43,16 +44,14 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `CONFIG;TP=20`
 `CONFIG;PL=10`
 `CONFIG;CR=6`
-`CONFIG;CR=6`
 `CONFIG;SF=12`
-`CONFIG;CL=55,TP=16`
+`CONFIG;CL=45`
+`CONFIG;RT=1`
 
 ### Config Sync
 
-`CONFIG_SYNC;ID=12,TP=10`
+`CONFIG_SYNC;ID=12,CL=45`
 `CONFIG_SYNC;ID=12,IH=0,SF=8`
-
-CONFIG_SYNC;ID=12,SF=12,IH=0
 
 `CONFIG_SYNC_CHECK`
 

@@ -18,9 +18,14 @@ enum DisplayState {
   DISPLAY_TMP_MESSAGE
 };
 
-struct DashboardItem {
+struct DashboardItemFloat {
   const char* key;
   float value;
+};
+
+struct DashboardItemInt {
+  const char* key;
+  int value;
 };
 
 class Display {

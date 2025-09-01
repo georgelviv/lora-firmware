@@ -50,38 +50,60 @@ void Display::setDashboard() {
   oled.setTextColor(SSD1306_WHITE);
   oled.setTextSize(1);
 
-  DashboardItem items[] = {
+  DashboardItemFloat itemsFloat[] = {
     {"FQ:", settings.frequency},
     {"BW:", settings.bandwidth},
-    {"SW:", (float)settings.syncWord},
-    {"SF:", (float)settings.spreagingFactor},
-    {"CR:", (float)settings.codingRate},
-    {"PL:", (float)settings.preambleLength},
-    {"TP:", (float)settings.transmitPower},
-    {"CL:", (float)settings.currentLimit},
-    {"IH:", (float)settings.implicitHeader},
-    {"HS:", (float)settings.headerSize},
   };
 
-  int colKey[] = {5, 70};
-  int colValue[] = {25, 90};
+  DashboardItemInt itemsInt[] = {
+    {"SW:", settings.syncWord},
+    {"SF:", settings.spreagingFactor},
+    {"CR:", settings.codingRate},
+    {"PL:", settings.preambleLength},
+    {"TP:", settings.transmitPower},
+    {"CL:", settings.currentLimit},
+    {"IH:", settings.implicitHeader},
+    {"HS:", settings.headerSize},
+    {"RT:", settings.retry}
+  };
+
+  int colFloatKey[] = {5, 70};
+  int colFloatValue[] = {25, 90};
+  int colIntKey[] = {5, 50, 90};
+  int colIntValue[] = {25, 70, 110};
   int line[] = {5, 15, 25, 35, 45};
 
-  int itemCount = sizeof(items) / sizeof(items[0]);
+  int itemFloatCount = sizeof(itemsFloat) / sizeof(itemsFloat[0]);
+  int itemIntCount = sizeof(itemsInt) / sizeof(itemsInt[0]);
 
-  for (int i = 0; i < itemCount; i++) {
+  for (int i = 0; i < itemFloatCount; i++) {
     int col = i % 2;
     int row = i / 2;
 
-    int keyX = colKey[col];
-    int valX = colValue[col];
+    int keyX = colFloatKey[col];
+    int valX = colFloatValue[col];
     int y = line[row];
 
     oled.setCursor(keyX, y);
-    oled.println(items[i].key);
+    oled.println(itemsFloat[i].key);
 
     oled.setCursor(valX, y);
-    oled.println(items[i].value);
+    oled.println(itemsFloat[i].value);
+  }
+
+  for (int i = 0; i < itemIntCount; i++) {
+    int col = i % 3;
+    int row = (i / 3) + (itemFloatCount / 2);
+
+    int keyX = colIntKey[col];
+    int valX = colIntValue[col];
+    int y = line[row];
+
+    oled.setCursor(keyX, y);
+    oled.println(itemsInt[i].key);
+
+    oled.setCursor(valX, y);
+    oled.println(itemsInt[i].value);
   }
 
   oled.display();

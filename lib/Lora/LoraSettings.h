@@ -21,15 +21,16 @@ class LoraSettingsManager {
     void updateSyncWord(int syncWord, bool callCb = true);
     void updatePreambleLength(int preambleLength, bool callCb = true);
     void updateCurrentLimit(int currentLimit, bool callCb = true);
+    void updateRetry(int retry, bool callCb = true);
   
     void setSettingsUpdatedCallback(void (* callback)(LoraSettings settings));
     LoraSettings getSettings();
 
+    Logger *logger;
     void setDefaultSettings();
 
   private:
     SX1276 *radio;
-    Logger *logger;
     LoraSettings settings;
     void (* settingsUpdatedCallback)(LoraSettings settings);
 };

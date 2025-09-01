@@ -24,7 +24,7 @@ class Lora {
   public:
     Lora();
     LoraSettingsManager settings;
-    Logger logger;
+    Logger* logger;
 
     void init(LoraSettings initalSettings);
     std::pair<int, int> transmit(String msg);

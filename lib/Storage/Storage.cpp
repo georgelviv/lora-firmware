@@ -22,6 +22,7 @@ LoraSettings Storage::getLoraSettings() {
   settings.headerSize = DEFAULT_HEADER_SIZE;
   settings.preambleLength = DEFAULT_PREAMBLE_LENGTH;
   settings.currentLimit = DEFAULT_CURRENT_LIMIT;
+  settings.retry = DEFAULT_RETRY;
 
   bool frequencyExists = this->preferences.isKey("frequency");
   if (frequencyExists) {
@@ -73,6 +74,11 @@ LoraSettings Storage::getLoraSettings() {
     settings.currentLimit = this->preferences.getInt("currentLimit");
   }
 
+  bool retryExists = this->preferences.isKey("retry");
+  if (retryExists) {
+    settings.retry = this->preferences.getInt("retry");
+  }
+
   return settings;
 }
 
@@ -87,4 +93,5 @@ void Storage::saveLoraSettings(LoraSettings settings) {
   this->preferences.putInt("headerSize", settings.headerSize);
   this->preferences.putInt("preambleLength", settings.preambleLength);
   this->preferences.putInt("currentLimit", settings.currentLimit);
+  this->preferences.putInt("retry", settings.retry);
 }

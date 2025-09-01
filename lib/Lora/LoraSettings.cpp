@@ -16,6 +16,7 @@ void LoraSettingsManager::updateSettings(LoraSettings settings) {
   this->updateSyncWord(settings.syncWord, false);
   this->updatePreambleLength(settings.preambleLength, false);
   this->updateCurrentLimit(settings.currentLimit, false);
+  this->updateRetry(settings.retry, false);
 
   if (this->settingsUpdatedCallback) {
     this->settingsUpdatedCallback(this->settings);
@@ -130,6 +131,15 @@ void LoraSettingsManager::updateHeaderSize(int headerSize, bool callCb) {
   }
 }
 
+void LoraSettingsManager::updateRetry(int retry, bool callCb) {
+  this->logger->info("RT updated to:", retry);
+  this->settings.retry = retry;
+
+  if (this->settingsUpdatedCallback && callCb) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
 void LoraSettingsManager::updateCodingRate(int codingRate, bool callCb) {
   if (this->radio->setCodingRate(codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
     this->logger->log("Selected CR is invalid for this module:", codingRate);
@@ -188,7 +198,7 @@ void LoraSettingsManager::updatePreambleLength(int preambleLength, bool callCb) 
 }
 
 void LoraSettingsManager::updateCurrentLimit(int currentLimit, bool callCb) {
-  if (this->radio->setPreambleLength(currentLimit) == RADIOLIB_ERR_INVALID_CURRENT_LIMIT ) {
+  if (this->radio->setCurrentLimit(currentLimit) == RADIOLIB_ERR_INVALID_CURRENT_LIMIT ) {
     this->logger->log("Selected CL is invalid for this module:", currentLimit);
     if (currentLimit != DEFAULT_CURRENT_LIMIT) {
       this->logger->log("Set default CL:", DEFAULT_CURRENT_LIMIT);
@@ -221,7 +231,8 @@ void LoraSettingsManager::setDefaultSettings() {
     DEFAULT_IMPLICIT_HEADER,
     DEFAULT_HEADER_SIZE,
     DEFAULT_PREAMBLE_LENGTH,
-    DEFAULT_CURRENT_LIMIT
+    DEFAULT_CURRENT_LIMIT,
+    DEFAULT_RETRY
   };
   this->updateSettings(defaultSettings);
 }

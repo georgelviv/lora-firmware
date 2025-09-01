@@ -11,6 +11,7 @@
 #define DEFAULT_HEADER_SIZE 10
 #define DEFAULT_PREAMBLE_LENGTH 8
 #define DEFAULT_CURRENT_LIMIT 45
+#define DEFAULT_RETRY 0
 
 struct LoraSettings {
   float frequency;
@@ -23,6 +24,7 @@ struct LoraSettings {
   int headerSize;
   int preambleLength;
   int currentLimit;
+  int retry;
 };
 
 #endif
