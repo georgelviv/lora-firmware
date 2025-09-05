@@ -44,13 +44,13 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `CONFIG;TP=20`
 `CONFIG;PL=10`
 `CONFIG;CR=6`
-`CONFIG;SF=12`
+`CONFIG;SF=10`
 `CONFIG;CL=45`
 `CONFIG;RT=1`
 
 ### Config Sync
 
-`CONFIG_SYNC;ID=12,CL=45`
+`CONFIG_SYNC;ID=12,FQ=868`
 `CONFIG_SYNC;ID=12,IH=0,SF=8`
 
 `CONFIG_SYNC_CHECK`

@@ -168,6 +168,7 @@ void MySerial::handleSendAck(String params) {
 void MySerial::sendConfigSync(String params) {
   this->prepareTransmit(params, "CONFIG_SYNC");
   String msg = "CONFIG_SYNC;" + params;
+
   this->sendLora(msg);
 }
 
@@ -208,7 +209,7 @@ void MySerial::handleIncomingConfigSyncCheck(String params) {
 }
 
 void MySerial::updateSettings(String str) {
-  String configs[8][2];
+  String configs[12][2];
   int configsCount = parseParams(str, configs);
 
   for (int i = 0; i < configsCount; i++) {

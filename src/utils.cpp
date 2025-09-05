@@ -1,6 +1,6 @@
 #include "utils.h"
 
-int parseParams(String str, String paramsPairs[8][2]) {
+int parseParams(String str, String paramsPairs[12][2]) {
   int paramIndex = 0;
   int length = str.length();
   bool inQuotes = false;
@@ -78,7 +78,7 @@ String formatParams(std::initializer_list<String> args) {
 }
 
 String getParam(String params, String lookingParam) {
-  String parsedParams[8][2];
+  String parsedParams[12][2];
   int paramsCount = parseParams(params, parsedParams);
 
   for (int i = 0; i < paramsCount; i++) {

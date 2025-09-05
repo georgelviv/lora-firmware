@@ -138,7 +138,7 @@ void Display::setTempMsg() {
 void Display::check() {
   if (this->currentState == DISPLAY_TMP_MESSAGE) {
     unsigned long passedTime = millis() - this->tmpMsgStart;
-    if (passedTime > 2000) {
+    if (passedTime > 1000) {
       this->setState(DISPLAY_DASHBOARD);
     }
   }
