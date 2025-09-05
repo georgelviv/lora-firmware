@@ -53,7 +53,7 @@ class MySerial {
     void sendAck(String params, String command);
 
     unsigned long pendingTimeoutStart = 0;
-    unsigned long pendingStart = 0;
+    unsigned long messageStart = 0;
     String pendingId = "";
     String pendingTimeoutMsg = "";
     LoraSettings fallbackConfigSyncSettings;

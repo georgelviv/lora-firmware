@@ -108,13 +108,13 @@ void MySerial::prepareTransmit(String params, String command) {
   this->logger.info(command + " command accepted");
   String messageId = getParam(params, "ID");
   this->pendingTimeoutMsg = command + "_NO_ACK;" + formatParams({"ID", messageId});
-  this->pendingStart = millis();
+  this->messageStart = millis();
 }
 
 void MySerial::handleAck(String params, String command) {
   String messageId = getParam(params, "ID");
   if (this->pendingId == messageId) {
-    Serial.println(command + "_ACK;" + this->getStatusString(&this->pendingStart, messageId));
+    Serial.println(command + "_ACK;" + this->getStatusString(&this->messageStart, messageId));
     this->pendingId = "";
   }
 }
