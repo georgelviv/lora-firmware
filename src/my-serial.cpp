@@ -21,6 +21,7 @@ void MySerial::handleSerialMessage(String command, String params) {
   this->logger.info("Incoming Serial command: ", command);
 
   this->display->showTempMsg("Serial", command);
+  this->attempt = 0;
 
   if (command == "PING") {
     this->sendPing(params);
@@ -109,6 +110,9 @@ void MySerial::prepareTransmit(String params, String command) {
   String messageId = getParam(params, "ID");
   this->pendingTimeoutMsg = command + "_NO_ACK;" + formatParams({"ID", messageId});
   this->messageStart = millis();
+
+  this->attemptCommand = command;
+  this->attemptParams = params;
 }
 
 void MySerial::handleAck(String params, String command) {
@@ -300,7 +304,18 @@ void MySerial::checkPending() {
   if (this->pendingId != "") {
     unsigned long passedTime = millis() - this->pendingTimeoutStart;
     if (passedTime > ACK_TIMEOUT) {
-      Serial.println(this->pendingTimeoutMsg);
+      int retry = this->lora->settings.getSettings().retry;
+      if (retry > this->attempt) {
+          this->attempt += 1;
+        if (this->attemptCommand == "PING") {
+          this->logger.info(this->attemptCommand + " attempt:", this->attempt + 1);
+          this->sendPing(this->attemptParams);
+        } else {
+          Serial.println(this->pendingTimeoutMsg);
+        }
+      } else {
+        Serial.println(this->pendingTimeoutMsg);
+      }
       this->pendingId = "";
     }
   }

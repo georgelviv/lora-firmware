@@ -7,7 +7,7 @@
 #include <Display.h>
 #include "utils.h"
 
-#define ACK_TIMEOUT 10000
+#define ACK_TIMEOUT 2000
 
 class MySerial {
   
@@ -54,8 +54,11 @@ class MySerial {
 
     unsigned long pendingTimeoutStart = 0;
     unsigned long messageStart = 0;
+    int attempt = 0;
     String pendingId = "";
     String pendingTimeoutMsg = "";
+    String attemptCommand = "";
+    String attemptParams = "";
     LoraSettings fallbackConfigSyncSettings;
     String settingsToUpdateOnTransmit = "";
 
