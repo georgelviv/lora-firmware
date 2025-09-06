@@ -63,3 +63,15 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 
 ### Config SYNC Reset
 `CONFIG_RESET_SYNC`
+
+
+## Status
+
+`ID` - Message ID  
+`DELAY` - Time difference or latency in ms  
+`RSSI` - Received Signal Strength Indicator  
+`SNR` - Signal-to-Noise Ratio  
+`TOA` - Time on Air in ms  
+`BPS` - Bytes per second (throughput)  
+`CHC` - Number of chunks transmitted  
+`ATT` - Attempt number on which the message was successfully sent (1 = first try, 2 = second try, etc.)

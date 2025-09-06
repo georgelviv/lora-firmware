@@ -7,7 +7,7 @@
 #include <Display.h>
 #include "utils.h"
 
-#define ACK_TIMEOUT 2000
+#define ACK_TIMEOUT 10000
 
 class MySerial {
   

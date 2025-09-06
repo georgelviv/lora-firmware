@@ -268,7 +268,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "SNR", String(snr),
       "TOA", String(toa),
       "BPS", String(bps),
-      "CHC", String(chunksCount)
+      "CHC", String(chunksCount),
+      "ATT", String(this->attempt + 1)
     });
   } else {
     return formatParams({
@@ -277,7 +278,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "SNR", String(snr),
       "TOA", String(toa),
       "BPS", String(bps),
-      "CHC", String(chunksCount)
+      "CHC", String(chunksCount),
+      "ATT", String(this->attempt + 1)
     });
   }
 }
@@ -287,7 +289,7 @@ void MySerial::printConfig() {
 
   Serial.print("CONFIG_GET;");
   Serial.println(formatParams({
-    "FW", String(settings.frequency),
+    "FQ", String(settings.frequency),
     "BW", String(settings.bandwidth),
     "SF", String(settings.spreagingFactor),
     "CR", String(settings.codingRate),
@@ -339,7 +341,7 @@ void MySerial::handleConfigResetSync(String params) {
 void MySerial::handleIncomingConfigResetSync(String params) {
   this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
   String defaultParams = formatParams({
-    "FW", String(DEFAULT_FREQUENCY),
+    "FQ", String(DEFAULT_FREQUENCY),
     "BW", String(DEFAULT_BANDWIDTH),
     "SF", String(DEFAULT_SPREADING_FACTOR),
     "CR", String(DEFAULT_CODDING_RATE),
@@ -362,7 +364,7 @@ void MySerial::handleIncomingConfigResetSync(String params) {
 void MySerial::handleIncomingConfigResetSyncAck(String params) {
   this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
   String defaultParams = formatParams({
-    "FW", String(DEFAULT_FREQUENCY),
+    "FQ", String(DEFAULT_FREQUENCY),
     "BW", String(DEFAULT_BANDWIDTH),
     "SF", String(DEFAULT_SPREADING_FACTOR),
     "CR", String(DEFAULT_CODDING_RATE),
