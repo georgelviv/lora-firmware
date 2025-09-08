@@ -44,7 +44,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `CONFIG;TP=20`
 `CONFIG;PL=10`
 `CONFIG;CR=6`
-`CONFIG;SF=10`
+`CONFIG;SF=9`
 `CONFIG;CL=45`
 `CONFIG;RT=3`
 
@@ -75,3 +75,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `BPS` - Bytes per second (throughput)  
 `CHC` - Number of chunks transmitted  
 `ATT` - Attempt number on which the message was successfully sent (1 = first try, 2 = second try, etc.)
+
+
+
+

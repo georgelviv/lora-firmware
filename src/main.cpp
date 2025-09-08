@@ -31,6 +31,7 @@ void loraSetup() {
   lora.setReceiveCallback(receiveCallback);
   lora.setReceiveChunkCallback(receiveChunkCallback);
   lora.init(preferenceSettings);
+  lora.listen();
 }
 
 void loop() {
@@ -41,7 +42,6 @@ void loop() {
 }
 
 void settingsUpdatedCallback(LoraSettings loraSettings) {
-  lora.listen();
   display.setDashboardSettings(loraSettings);
   storage.saveLoraSettings(loraSettings);
 }

@@ -140,6 +140,12 @@ void LoraSettingsManager::updateRetry(int retry, bool callCb) {
   }
 }
 
+void LoraSettingsManager::runSettingsCallback() {
+  if (this->settingsUpdatedCallback) {
+    this->settingsUpdatedCallback(settings);
+  }
+}
+
 void LoraSettingsManager::updateCodingRate(int codingRate, bool callCb) {
   if (this->radio->setCodingRate(codingRate) == RADIOLIB_ERR_INVALID_CODING_RATE) {
     this->logger->log("Selected CR is invalid for this module:", codingRate);

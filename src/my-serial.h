@@ -54,6 +54,8 @@ class MySerial {
 
     unsigned long pendingTimeoutStart = 0;
     unsigned long messageStart = 0;
+    unsigned long loraPending = 0;
+
     int attempt = 0;
     String pendingId = "";
     String pendingTimeoutMsg = "";

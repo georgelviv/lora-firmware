@@ -50,6 +50,8 @@ void MySerial::parseLoraMessage(String msg) {
   this->display->showTempMsg("Lora", command);
   this->logger.info("Incoming Lora command: ", command);
 
+  this->loraPending = millis();
+
   if (command == "PING") {
     this->handlePing(params);
   } else if (command == "PING_ACK") {
@@ -186,10 +188,11 @@ void MySerial::handleIncomingConfigSync(String params) {
   this->sendLora(msg);
 }
 
+
+
 void MySerial::handleConfigSyncAck(String params) {
   this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
   this->updateSettings(params);
-
   
   this->prepareTransmit(params, "CONFIG_SYNC_CHECK");
 
@@ -220,27 +223,27 @@ void MySerial::updateSettings(String str) {
     String key = configs[i][0];
     String val = configs[i][1];
     if (key == "FQ") {
-      this->lora->settings.updateFrequency(val.toFloat());
+      this->lora->settings.updateFrequency(val.toFloat(), false);
     } else if (key == "BW") {
-       this->lora->settings.updateBandwidth(val.toFloat());
+       this->lora->settings.updateBandwidth(val.toFloat(), false);
     } else if (key == "SF") {
-       this->lora->settings.updateSpreadingFactor(val.toInt());
+       this->lora->settings.updateSpreadingFactor(val.toInt(), false);
     } else if (key == "IH") {
-       this->lora->settings.updateImplicitHeader(val.toInt());
+       this->lora->settings.updateImplicitHeader(val.toInt(), false);
     } else if (key == "HS") {
-       this->lora->settings.updateHeaderSize(val.toInt());
+       this->lora->settings.updateHeaderSize(val.toInt(), false);
     } else if (key == "CR") {
-       this->lora->settings.updateCodingRate(val.toInt());
+       this->lora->settings.updateCodingRate(val.toInt(), false);
     } else if (key == "TP") {
-       this->lora->settings.updateTransmitPower(val.toInt());
+       this->lora->settings.updateTransmitPower(val.toInt(), false);
     } else if (key == "SW") {
-       this->lora->settings.updateSyncWord(val.toInt());
+       this->lora->settings.updateSyncWord(val.toInt(), false);
     } else if (key == "PL") {
-       this->lora->settings.updatePreambleLength(val.toInt());
+       this->lora->settings.updatePreambleLength(val.toInt(), false);
     } else if (key == "CL") {
-       this->lora->settings.updateCurrentLimit(val.toInt());
+       this->lora->settings.updateCurrentLimit(val.toInt(), false);
     } else if (key == "RT") {
-       this->lora->settings.updateRetry(val.toInt());
+       this->lora->settings.updateRetry(val.toInt(), false);
     } else if (key == "ID") {
       continue;
     } else {
@@ -248,6 +251,8 @@ void MySerial::updateSettings(String str) {
       Serial.println(key);
     }
   }
+
+  this->lora->settings.runSettingsCallback();  
 };
 
 String MySerial::getStatusString(unsigned long* startTime, String messageId) {
@@ -321,6 +326,15 @@ void MySerial::checkPending() {
       this->pendingId = "";
     }
   }
+
+  if (this->loraPending != 0) {
+    unsigned long passedTime = millis() - this->loraPending;
+    if (passedTime > 2 * 60 * 1000) {
+      this->loraPending = 0;
+      this->logger.info("Module autoreset");
+      this->lora->settings.setDefaultSettings();
+    }
+  } 
 }
 
 void MySerial::handleChunkReceived(int chunk, int totalChunks) {
