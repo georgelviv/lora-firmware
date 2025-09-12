@@ -34,7 +34,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `IH` - Implicit Header `0` or `1`
 `HS` - Header size in bytes
 `SW` - Sync Word `171`
-`PL` - Preamble length `6` to `65535`
+`PL` - Preamble length `6` to `65535`. (It's not recommend to have > `100`)
 `RT` - Retry `0` to `10`.  `0` means no retries
  
 ### Update config 
