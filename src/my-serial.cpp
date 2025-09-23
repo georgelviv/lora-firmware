@@ -315,6 +315,8 @@ void MySerial::checkPending() {
           this->attempt += 1;
           this->logger.info(this->attemptCommand + " attempt:", this->attempt + 1);
           this->sendPing(this->attemptParams);
+        } else {
+          Serial.println(this->pendingTimeoutMsg);
         }
       } else if (this->attemptCommand == "CONFIG_SYNC_ACK") {
         this->lora->settings.updateSettings(this->fallbackConfigSyncSettings);
