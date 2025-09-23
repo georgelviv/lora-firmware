@@ -188,8 +188,6 @@ void MySerial::handleIncomingConfigSync(String params) {
   this->sendLora(msg);
 }
 
-
-
 void MySerial::handleConfigSyncAck(String params) {
   this->fallbackConfigSyncSettings = this->lora->settings.getSettings();
   this->updateSettings(params);
@@ -311,15 +309,16 @@ void MySerial::checkPending() {
   if (this->pendingId != "") {
     unsigned long passedTime = millis() - this->pendingTimeoutStart;
     if (passedTime > ACK_TIMEOUT) {
-      int retry = this->lora->settings.getSettings().retry;
-      if (retry > this->attempt) {
+      if (this->attemptCommand == "PING") {
+        int retry = this->lora->settings.getSettings().retry;
+        if (retry > this->attempt) {
           this->attempt += 1;
-        if (this->attemptCommand == "PING") {
           this->logger.info(this->attemptCommand + " attempt:", this->attempt + 1);
           this->sendPing(this->attemptParams);
-        } else {
-          Serial.println(this->pendingTimeoutMsg);
         }
+      } else if (this->attemptCommand == "CONFIG_SYNC_ACK") {
+        this->lora->settings.updateSettings(this->fallbackConfigSyncSettings);
+        Serial.println(this->pendingTimeoutMsg);
       } else {
         Serial.println(this->pendingTimeoutMsg);
       }
@@ -331,7 +330,7 @@ void MySerial::checkPending() {
     unsigned long passedTime = millis() - this->loraPending;
     if (passedTime > 2 * 60 * 1000) {
       this->loraPending = 0;
-      this->logger.info("Module autoreset");
+      Serial.println("MODULE AUTORESET");
       this->lora->settings.setDefaultSettings();
     }
   } 
