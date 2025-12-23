@@ -4,11 +4,13 @@
 #include <Lora.h>
 #include <Display.h>
 #include <Storage.h>
+#include "api-server.h"
 
 Lora lora;
 Display display;
 MySerial mySerial(&lora, &display);
 Storage storage;
+ApiServer apiServer;
 
 void settingsUpdatedCallback(LoraSettings settings);
 void receiveCallback(String msg);
@@ -22,6 +24,8 @@ void setup() {
   display.init();
   loraSetup();
   display.setState(DISPLAY_DASHBOARD);
+  apiServer.setup();
+  display.setWifi(true);
 }
 
 void loraSetup() {

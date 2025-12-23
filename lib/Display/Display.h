@@ -37,6 +37,7 @@ class Display {
     void setDashboardSettings(LoraSettings settings);
     void check();
     void showTempMsg(String msg1, String ms2);
+    void setWifi(bool isEnabled);
 
   private:
     Adafruit_SSD1306 oled;
@@ -46,9 +47,11 @@ class Display {
     void setInit();
     void setDashboard();
     void setTempMsg();
+    void showHeader();
 
     String tmpMsg1;
     String tmpMsg2;
+    bool wifiIsEnabled = false;
     unsigned long tmpMsgStart = 0;
 };
 

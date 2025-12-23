@@ -330,7 +330,7 @@ void MySerial::checkPending() {
 
   if (this->loraPending != 0) {
     unsigned long passedTime = millis() - this->loraPending;
-    if (passedTime > 2 * 60 * 1000) {
+    if (passedTime > 30 * 60 * 1000) {
       this->loraPending = 0;
       Serial.println("MODULE AUTORESET");
       this->lora->settings.setDefaultSettings();

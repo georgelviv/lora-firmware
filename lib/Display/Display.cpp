@@ -1,5 +1,8 @@
 #include "display.h"
 
+int lineSize = 10;
+int leftPadding = 10;
+
 Display::Display() 
   : oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET) {
 }
@@ -36,17 +39,39 @@ void Display::setState(DisplayState state) {
   }
 }
 
+void Display::setWifi(bool isEnabled) {
+  this->wifiIsEnabled = isEnabled;
+
+  if (this->currentState == DISPLAY_DASHBOARD) {
+    this->setDashboard();
+  }
+}
+
 void Display::setInit() {
   oled.clearDisplay();
+  this->showHeader();
   oled.setTextColor(SSD1306_WHITE);
-  oled.setCursor(10, 10);
+  oled.setCursor(leftPadding, lineSize * 3);
   oled.setTextSize(1);
   oled.println("Initializing");
   oled.display();
 }
 
+void Display::showHeader() {
+  oled.setTextColor(SSD1306_WHITE);
+  oled.setCursor(leftPadding, lineSize * 1);
+  oled.setTextSize(1);
+  oled.println("LoraTunning");
+
+  if (this->wifiIsEnabled) {
+    oled.setCursor(110, lineSize * 1);
+    oled.println("W+");
+  }
+}
+
 void Display::setDashboard() {
   oled.clearDisplay();
+  this->showHeader();
   oled.setTextColor(SSD1306_WHITE);
   oled.setTextSize(1);
 
@@ -67,11 +92,17 @@ void Display::setDashboard() {
     {"RT:", settings.retry}
   };
 
-  int colFloatKey[] = {5, 70};
+  int colFloatKey[] = {leftPadding, 70};
   int colFloatValue[] = {25, 90};
-  int colIntKey[] = {5, 50, 90};
+  int colIntKey[] = {leftPadding, 50, 90};
   int colIntValue[] = {25, 70, 110};
-  int line[] = {5, 15, 25, 35, 45};
+  int line[] = {
+    lineSize * 2 + 5,
+    lineSize * 3 + 5,
+    lineSize * 4 + 5,
+    lineSize * 5 + 5,
+    lineSize * 6 + 5
+  };
 
   int itemFloatCount = sizeof(itemsFloat) / sizeof(itemsFloat[0]);
   int itemIntCount = sizeof(itemsInt) / sizeof(itemsInt[0]);
@@ -125,12 +156,13 @@ void Display::showTempMsg(String msg1, String msg2) {
 
 void Display::setTempMsg() {
   oled.clearDisplay();
+  this->showHeader();
   oled.setTextColor(SSD1306_WHITE);
-  oled.setCursor(10, 10);
+  oled.setCursor(leftPadding, lineSize * 3);
   oled.setTextSize(1);
   oled.println(this->tmpMsg1);
 
-  oled.setCursor(10, 20);
+  oled.setCursor(leftPadding, lineSize * 4);
   oled.println(this->tmpMsg2);
   oled.display();
 }
