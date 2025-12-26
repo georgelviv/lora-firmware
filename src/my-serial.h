@@ -5,6 +5,7 @@
 #include <Lora.h>
 #include <Logger.h>
 #include <Display.h>
+#include <SerialBridge.h>
 #include "utils.h"
 
 #define ACK_TIMEOUT 10000
@@ -12,10 +13,11 @@
 class MySerial {
   
   public:
-    MySerial(Lora *lora, Display *display);
+    MySerial(Lora *lora, Display *display, SerialBridge *serialBridge);
     Logger logger;
 
     void parseSerial();
+    void runCommand(String msg);
     void parseLoraMessage(String msg);
     void checkPending();
     void handleChunkReceived(int chunk, int totalChunks);
@@ -23,6 +25,7 @@ class MySerial {
   private:
     Lora *lora;
     Display *display;
+    SerialBridge *serialBridge;
   
     void handleSerialMessage(String command, String params);
     void sendPing(String params);

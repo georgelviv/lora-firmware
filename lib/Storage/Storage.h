@@ -1,5 +1,4 @@
-#ifndef STORAGE_H
-#define STORAGE_H
+#pragma once
 
 #include <Preferences.h>
 #include <ProjectConstants.h>
@@ -15,5 +14,3 @@ class Storage {
   private:
     Preferences preferences;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef PROJECTS_CONSTANT_H
-#define PROJECTS_CONSTANT_H
+#pragma once
 
 #define DEFAULT_FREQUENCY 868
 #define DEFAULT_BANDWIDTH 125
@@ -26,5 +25,3 @@ struct LoraSettings {
   int currentLimit;
   int retry;
 };
-
-#endif

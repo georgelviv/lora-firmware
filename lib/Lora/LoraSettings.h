@@ -1,5 +1,4 @@
-#ifndef LORA_SETTINGS_H
-#define LORA_SETTINGS_H
+#pragma once
 
 #include "Arduino.h"
 #include <RadioLib.h>
@@ -35,5 +34,3 @@ class LoraSettingsManager {
     LoraSettings settings;
     void (* settingsUpdatedCallback)(LoraSettings settings);
 };
-
-#endif

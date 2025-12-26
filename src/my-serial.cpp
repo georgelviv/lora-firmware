@@ -1,8 +1,11 @@
 #include "my-serial.h"
 
-MySerial::MySerial(Lora *lora, Display *display): logger("Serial", true) {
+MySerial::MySerial(
+  Lora *lora, Display *display, SerialBridge *serialBridge
+): logger("Serial", true) {
   this->lora = lora;
   this->display = display;
+  this->serialBridge = serialBridge;
 }
 
 void MySerial::parseSerial() {
@@ -10,11 +13,15 @@ void MySerial::parseSerial() {
     String msg = Serial.readStringUntil('\n');
     msg.trim();
 
-    String command = getCommand(msg);
-    String params = getParams(msg);
-
-    handleSerialMessage(command, params);
+    this->runCommand(msg);
   }
+}
+
+void MySerial::runCommand(String msg) {
+  String command = getCommand(msg);
+  String params = getParams(msg);
+
+  handleSerialMessage(command, params);
 }
 
 void MySerial::handleSerialMessage(String command, String params) {
@@ -38,8 +45,8 @@ void MySerial::handleSerialMessage(String command, String params) {
   } else if (command == "CONFIG_RESET_SYNC") {
     this->handleConfigResetSync(params);
   }else {
-    Serial.print("Unknown message:");
-    Serial.println(command);
+    this->serialBridge->print("Unknown message:");
+    this->serialBridge->println(command);
   }
 }
 
@@ -77,8 +84,8 @@ void MySerial::parseLoraMessage(String msg) {
   } else if (command == "CONFIG_RESET_SYNC_CHECK_ACK") {
     this->handleIncomingConfigResetSyncCheckAck(params);
   } else {
-    Serial.print("Unknown incoming Lora message:");
-    Serial.println(msg);
+    this->serialBridge->print("Unknown incoming Lora message:");
+    this->serialBridge->println(msg);
   }
 }
 
@@ -120,7 +127,7 @@ void MySerial::prepareTransmit(String params, String command) {
 void MySerial::handleAck(String params, String command) {
   String messageId = getParam(params, "ID");
   if (this->pendingId == messageId) {
-    Serial.println(command + "_ACK;" + this->getStatusString(&this->messageStart, messageId));
+    this->serialBridge->println(command + "_ACK;" + this->getStatusString(&this->messageStart, messageId));
     this->pendingId = "";
   }
 }
@@ -164,7 +171,7 @@ void MySerial::handleIncomingSend(String params) {
 
   String data = getParam(params, "DATA");
   String msg = "DATA;" + formatParams({"DATA", data});
-  Serial.println(msg);
+  this->serialBridge->println(msg);
 }
 
 void MySerial::handleSendAck(String params) {
@@ -245,8 +252,8 @@ void MySerial::updateSettings(String str) {
     } else if (key == "ID") {
       continue;
     } else {
-      Serial.println("Unknown config to update");
-      Serial.println(key);
+      this->serialBridge->print("Unknown config to update");
+      this->serialBridge->println(key);
     }
   }
 
@@ -290,8 +297,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
 void MySerial::printConfig() {
   LoraSettings settings = lora->settings.getSettings();
 
-  Serial.print("CONFIG_GET;");
-  Serial.println(formatParams({
+  this->serialBridge->print("CONFIG_GET;");
+  this->serialBridge->println(formatParams({
     "FQ", String(settings.frequency),
     "BW", String(settings.bandwidth),
     "SF", String(settings.spreagingFactor),
@@ -316,13 +323,13 @@ void MySerial::checkPending() {
           this->logger.info(this->attemptCommand + " attempt:", this->attempt + 1);
           this->sendPing(this->attemptParams);
         } else {
-          Serial.println(this->pendingTimeoutMsg);
+          this->serialBridge->println(this->pendingTimeoutMsg);
         }
       } else if (this->attemptCommand == "CONFIG_SYNC_ACK") {
         this->lora->settings.updateSettings(this->fallbackConfigSyncSettings);
-        Serial.println(this->pendingTimeoutMsg);
+        this->serialBridge->println(this->pendingTimeoutMsg);
       } else {
-        Serial.println(this->pendingTimeoutMsg);
+        this->serialBridge->println(this->pendingTimeoutMsg);
       }
       this->pendingId = "";
     }
@@ -332,7 +339,7 @@ void MySerial::checkPending() {
     unsigned long passedTime = millis() - this->loraPending;
     if (passedTime > 30 * 60 * 1000) {
       this->loraPending = 0;
-      Serial.println("MODULE AUTORESET");
+      this->serialBridge->println("MODULE AUTORESET");
       this->lora->settings.setDefaultSettings();
     }
   } 

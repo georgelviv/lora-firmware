@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -20,5 +19,3 @@ class Logger {
     String context;
     bool isVerbose;
 };
-
-#endif

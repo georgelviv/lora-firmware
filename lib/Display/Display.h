@@ -1,5 +1,4 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#pragma once
 
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -54,5 +53,3 @@ class Display {
     bool wifiIsEnabled = false;
     unsigned long tmpMsgStart = 0;
 };
-
-#endif

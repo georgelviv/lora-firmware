@@ -1,5 +1,4 @@
-#ifndef LORA_H
-#define LORA_H
+#pragma once
 
 #include "Arduino.h"
 #include <Logger.h>
@@ -66,5 +65,3 @@ class Lora {
     void transmitChunk();
     void onTransmitDone();
 };
-
-#endif
