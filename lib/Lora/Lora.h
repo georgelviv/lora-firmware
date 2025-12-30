@@ -36,6 +36,7 @@ class Lora {
     void setTransmitCallback(std::function<void()> callback);
     void setTransmitChunkCallback(std::function<void(int, int)> callback);
     void listen();
+    int getRTOA();
     int getTOA(int payloadLength);
 
     static void packetReceiveCallback(void);
@@ -54,6 +55,8 @@ class Lora {
     std::function<void(int chunk, int totalChunks)> transmitChunkCallback;
 
     std::vector<String> chunksToTransmit;
+    unsigned long sendStart = 0;
+    unsigned long rtoa = 0;
     int currentChunkIndex = 0;
 
     std::vector<String> receivedChunks;

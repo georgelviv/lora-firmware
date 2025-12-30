@@ -38,6 +38,7 @@ void Lora::packetSentCallback() {
 }
 
 std::pair<int, int> Lora::transmit(String msg) {
+  this->rtoa = 0;
   this->splitTransmitMessage(msg);
 
   this->transmitChunk();
@@ -51,6 +52,7 @@ std::pair<int, int> Lora::transmit(String msg) {
 void Lora::transmitChunk() {
   String currentChunk = this->chunksToTransmit[this->currentChunkIndex];
   this->transmissionState = this->radio.startTransmit(currentChunk);
+  this->sendStart = millis();
   this->isTransmitInProgres = true;
 }
 
@@ -178,6 +180,10 @@ int Lora::getTOA(int payloadLength) {
   return static_cast<int>(time); 
 }
 
+int Lora::getRTOA() {
+  return this->rtoa;
+}
+
 void Lora::setReceiveChunkCallback(void (* callback)(int chunk, int totalChunks)) {
   this->receiveChunkCallback = callback;
 }
@@ -195,6 +201,7 @@ void Lora::setTransmitChunkCallback(std::function<void(int, int)> callback) {
 }
 
 void Lora::onTransmitDone() {
+  this->rtoa = (int)(millis() - this->sendStart) + this->rtoa;
   this->isTransmitInProgres = false;
   int totalChunks = this->chunksToTransmit.size();
   if (this->currentChunkIndex + 1 >= this->chunksToTransmit.size()) {

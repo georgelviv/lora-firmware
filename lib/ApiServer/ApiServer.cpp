@@ -7,7 +7,6 @@ AsyncWebServer server(80);
 AsyncWebSocket ApiServer::ws("/ws");
 
 void ApiServer::setup() {
-
   this->logger = new Logger("API Server", true);
 
   this->setupWiFi();

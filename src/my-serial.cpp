@@ -116,9 +116,9 @@ void MySerial::prepareTransmit(String params, String command) {
   });
 
   this->logger.info(command + " command accepted");
+  this->messageStart = millis();
   String messageId = getParam(params, "ID");
   this->pendingTimeoutMsg = command + "_NO_ACK;" + formatParams({"ID", messageId});
-  this->messageStart = millis();
 
   this->attemptCommand = command;
   this->attemptParams = params;
@@ -266,6 +266,7 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   *startTime = 0;
   float rssi = lora->getRSSI();
   float snr = lora->getSNR();
+  int rtoa = lora->getRTOA();
   int toa = lora->getTOA(this->payloadSize);
   int bps = int(((float)this->payloadSize) / (float)toa * 1000.0);
   int chunksCount = this->chunksCount;
@@ -277,6 +278,7 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RSSI", String(rssi),
       "SNR", String(snr),
       "TOA", String(toa),
+      "RTOA", String(rtoa),
       "BPS", String(bps),
       "CHC", String(chunksCount),
       "ATT", String(this->attempt + 1)
@@ -287,6 +289,7 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RSSI", String(rssi),
       "SNR", String(snr),
       "TOA", String(toa),
+      "RTOA", String(rtoa),
       "BPS", String(bps),
       "CHC", String(chunksCount),
       "ATT", String(this->attempt + 1)

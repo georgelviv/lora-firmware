@@ -12,7 +12,8 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 
 
 ## Ping
-`PING;ID=12` - ping 
+`PING;ID=12` - ping or 
+`PING`
 
 ### Ping response
 `PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75б,TOA=25,BPS=400` - response to ping
@@ -71,7 +72,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `DELAY` - Time difference or latency in ms  
 `RSSI` - Received Signal Strength Indicator  
 `SNR` - Signal-to-Noise Ratio  
-`TOA` - Time on Air in ms  
+`TOA` - Time on Air in ms (estimated by current configuration, details in datasheet 4.1.1.7. Time on air)
 `BPS` - Bytes per second (throughput)  
 `CHC` - Number of chunks transmitted  
 `ATT` - Attempt number on which the message was successfully sent (1 = first try, 2 = second try, etc.)
