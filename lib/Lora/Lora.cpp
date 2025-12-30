@@ -37,6 +37,22 @@ void Lora::packetSentCallback() {
   Lora::interruptFlag = true;
 }
 
+float Lora::getETX(int RTOA_ms, int txPower, int currentLimit) {
+  float vcc_ESP32 = 3.3;
+  float iddtTable_mA;
+  if (txPower >= 20) {
+    iddtTable_mA = 120.0f;
+  } else if (txPower >= 17) {
+    iddtTable_mA = 87.0f;
+  } else if (txPower >= 13) {
+    iddtTable_mA = 29.0f;
+  } else {
+    iddtTable_mA = 20.0f;
+  }
+  float iddt_mA = min(iddtTable_mA, (float)currentLimit);
+  return (vcc_ESP32 * iddt_mA * RTOA_ms) / 1000.0f;
+}
+
 std::pair<int, int> Lora::transmit(String msg) {
   this->rtoa = 0;
   this->splitTransmitMessage(msg);

@@ -73,9 +73,11 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `RSSI` - Received Signal Strength Indicator  
 `SNR` - Signal-to-Noise Ratio  
 `TOA` - Time on Air in ms (estimated by current configuration, details in datasheet 4.1.1.7. Time on air)
+`RTOA` - Real time on air
 `BPS` - Bytes per second (throughput)  
 `CHC` - Number of chunks transmitted  
 `ATT` - Attempt number on which the message was successfully sent (1 = first try, 2 = second try, etc.)
+`ETX` - Energy per Transmission in mJ
 
 
 

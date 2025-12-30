@@ -38,6 +38,7 @@ class Lora {
     void listen();
     int getRTOA();
     int getTOA(int payloadLength);
+    float getETX(int RTOA_ms, int txPower, int currentLimit);
 
     static void packetReceiveCallback(void);
     static void packetSentCallback(void);

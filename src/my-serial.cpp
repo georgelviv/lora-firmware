@@ -268,6 +268,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
   float snr = lora->getSNR();
   int rtoa = lora->getRTOA();
   int toa = lora->getTOA(this->payloadSize);
+  LoraSettings settings = lora->settings.getSettings();
+  float etx = lora->getETX(rtoa, settings.transmitPower, settings.currentLimit);
   int bps = int(((float)this->payloadSize) / (float)toa * 1000.0);
   int chunksCount = this->chunksCount;
 
@@ -281,7 +283,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RTOA", String(rtoa),
       "BPS", String(bps),
       "CHC", String(chunksCount),
-      "ATT", String(this->attempt + 1)
+      "ATT", String(this->attempt + 1),
+      "ETX", String(etx)
     });
   } else {
     return formatParams({
@@ -292,7 +295,8 @@ String MySerial::getStatusString(unsigned long* startTime, String messageId) {
       "RTOA", String(rtoa),
       "BPS", String(bps),
       "CHC", String(chunksCount),
-      "ATT", String(this->attempt + 1)
+      "ATT", String(this->attempt + 1),
+      "ETX", String(etx)
     });
   }
 }
