@@ -6,6 +6,8 @@ LoraSettingsManager::LoraSettingsManager(SX1276 *radio, Logger *logger) {
 };
 
 void LoraSettingsManager::updateSettings(LoraSettings settings) {
+  this->radio->standby();
+
   this->updateFrequency(settings.frequency, false);
   this->updateBandwidth(settings.bandwidth, false);
   this->updateTransmitPower(settings.transmitPower, false);

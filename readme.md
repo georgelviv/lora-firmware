@@ -15,8 +15,13 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `PING;ID=12` - ping or 
 `PING`
 
+## Flow
+
+[SENDER]    PING     ->  [RECEIVER]
+[SENDER] <- PING_ACK     [RECEIVER]
+
 ### Ping response
-`PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75б,TOA=25,BPS=400` - response to ping
+`PING_ACK;ID=1,DELAY=544,RSSI=-12.00,SNR=12.75б,TOA=25,RTOA=2033,BPS=11,CHC=1,ATT=1,ETX=134.18` - response to ping
 
 ## Send
 
@@ -40,7 +45,7 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
  
 ### Update config 
 
-`CONFIG;FQ=867.0`
+`CONFIG;FQ=869.0`
 `CONFIG;BW=125`
 `CONFIG;TP=20`
 `CONFIG;PL=10`
@@ -54,7 +59,14 @@ Very simple lora firmware. Developed for SX1276 bases on esp32
 `CONFIG_SYNC;ID=12,FQ=869`
 `CONFIG_SYNC;ID=12,IH=0,SF=8`
 
-`CONFIG_SYNC_CHECK`
+#### Flow
+
+                [SENDER]    CONFIG_SYNC           ->  [RECEIVER]
+                [SENDER] <- CONFIG_SYNC_ACK           [RECEIVER] Update Settings
+Update Settings [SENDER]                              [RECEIVER]
+                [SENDER]    CONFIG_SYNC_CHECK     ->  [RECEIVER]
+                [SENDER] <- CONFIG_SYNC_CHECK_ACK     [RECEIVER]
+
 
 ### Config Read
 `CONFIG_GET`

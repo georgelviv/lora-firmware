@@ -51,7 +51,8 @@ class MySerial {
     void handleIncomingConfigResetSyncCheckAck(String params);
 
     void sendLora(String msg);
-    void prepareTransmit(String params, String command);
+    void prepareTransmitWithPending(String params, String command);
+    void prepareTransmitWithSettingsUpdate(String params, String command);
     void handleAck(String params, String command);
     void sendAck(String params, String command);
 
