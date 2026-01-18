@@ -22,8 +22,15 @@ void ApiServer::setupWiFi() {
 }
 
 void ApiServer::setupServer() {
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", "LoraTunning Hotspot OK");
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response =
+      request->beginResponse(200, "text/plain", "LoraTunning Hotspot OK");
+
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response->addHeader("Access-Control-Allow-Headers", "*");
+
+    request->send(response);
   });
 
   ws.onEvent([this](AsyncWebSocket *server,
