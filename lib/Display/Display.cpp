@@ -20,6 +20,8 @@ bool Display::init() {
 
   this->setInit();
 
+  this->deviceId = getDeviceId();
+
   return true;
 }
 
@@ -61,7 +63,7 @@ void Display::showHeader() {
   oled.setTextColor(SSD1306_WHITE);
   oled.setCursor(leftPadding, lineSize * 1);
   oled.setTextSize(1);
-  oled.println("LoraTunning");
+  oled.println("LoraTunning " + this->deviceId);
 
   if (this->wifiIsEnabled) {
     oled.setCursor(110, lineSize * 1);

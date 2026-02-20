@@ -1,6 +1,6 @@
 #include "ApiServer.h"
 
-const String ssid = "LoraTunning";
+String ssid;
 const String password = "2233445566";
 
 AsyncWebServer server(80);
@@ -9,12 +9,14 @@ AsyncWebSocket ApiServer::ws("/ws");
 void ApiServer::setup() {
   this->logger = new Logger("API Server", true);
 
+  this->deviceId = getDeviceId();
   this->setupWiFi();
   this->setupServer();
 }
 
 void ApiServer::setupWiFi() {
   WiFi.mode(WIFI_AP);
+  ssid = "LoraTunning-" + this->deviceId;
   WiFi.softAP(ssid, password);
 
   IPAddress ip = WiFi.softAPIP();
@@ -25,6 +27,17 @@ void ApiServer::setupServer() {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncWebServerResponse *response =
       request->beginResponse(200, "text/plain", "LoraTunning Hotspot OK");
+
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response->addHeader("Access-Control-Allow-Headers", "*");
+
+    request->send(response);
+  });
+
+  server.on("/id", HTTP_GET, [this](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response =
+      request->beginResponse(200, "text/plain", this->deviceId);
 
     response->addHeader("Access-Control-Allow-Origin", "*");
     response->addHeader("Access-Control-Allow-Methods", "GET, OPTIONS");

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 #define DEFAULT_FREQUENCY 868
 #define DEFAULT_BANDWIDTH 125
 #define DEFAULT_SPREADING_FACTOR 10
@@ -25,3 +27,5 @@ struct LoraSettings {
   int currentLimit;
   int retry;
 };
+
+String getDeviceId();

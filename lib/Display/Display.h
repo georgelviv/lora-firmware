@@ -50,6 +50,7 @@ class Display {
 
     String tmpMsg1;
     String tmpMsg2;
+    String deviceId;
     bool wifiIsEnabled = false;
     unsigned long tmpMsgStart = 0;
 };

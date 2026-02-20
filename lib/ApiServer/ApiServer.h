@@ -1,6 +1,7 @@
 #pragma once
 
 #include <WiFi.h>
+#include <ProjectConstants.h>
 #include <Arduino.h>
 #include <Logger.h>
 #include <ESPAsyncWebServer.h>
@@ -21,4 +22,5 @@ class ApiServer {
     Logger* logger;
     static AsyncWebSocket ws;
     DataCallback dataCallback = nullptr;
+    String deviceId;
 };
